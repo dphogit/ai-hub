@@ -1,4 +1,5 @@
 import { Heap } from "mnemonist";
+import { Set } from "immutable";
 import { EvaluationFunction, SearchProblem } from "../core";
 import { STNode } from "../core";
 
@@ -47,7 +48,7 @@ export function bestFirstGraphSearch<S, A>(
   evalFn: EvaluationFunction<S, A>
 ) {
   const frontier = new Heap<STNode<S, A>>((a, b) => evalFn(a) - evalFn(b));
-  const explored = new Set<S>();
+  const explored = Set<S>();
   const root = new STNode<S, A>(problem.initialState);
 
   frontier.push(root);
@@ -62,6 +63,8 @@ export function bestFirstGraphSearch<S, A>(
     explored.add(node.state);
 
     node.expand(problem).forEach((child) => {
+      // TODO Need object value equality, currently only checks reference equality hence
+      // this is insufficient to check if a state has been explored.
       if (!explored.has(child.state)) {
         frontier.push(child);
       }

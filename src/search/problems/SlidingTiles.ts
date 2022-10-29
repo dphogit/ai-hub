@@ -13,6 +13,8 @@ type STAction = "U" | "L" | "R" | "D";
  * An action is one of "U" | "D" | "L" | "R" where U is up, D is down, L is left
  * and R is right to indicate which way to move the empty/blank tile which will swap
  * with the tile in that direction.
+ *
+ * TODO Use immutable list from library.
  */
 export class SlidingTiles extends SearchProblem<STState, STAction> {
 
