@@ -52,4 +52,8 @@ describe('SlidingTiles', () =>  {
     expect(eightPuzzle.manhattanDistanceHeuristic([0, 1, 2, 3, 4, 5, 6, 7, 8])).toBe(12);
     expect(eightPuzzle.manhattanDistanceHeuristic([7, 2, 4, 5, 0, 6, 8, 3, 1])).toBe(14);
   })
+
+  test('action cost', () => {
+    expect(eightPuzzle.getActionCost([1, 2, 3, 4, 5, 6, 7, 0, 8], 'R', [1, 2, 3, 4, 5, 6, 7, 8, 0])).toBe(1);
+  })
 })
