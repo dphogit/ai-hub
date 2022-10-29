@@ -7,6 +7,9 @@ import { STNode } from "../core";
  * to pick the next node to expand. This uses a tree search (repeated states are NOT checked)
  * hence may cause an infinite loop if the problem has cycles.
  *
+ * NOTE: If the heuristic function is defined as a problem class method,
+ * you must bind the method to the same problem instance before passing it to this function.
+ *
  * @param problem The search problem to solve.
  * @param evalFn  The evaluation function to use to determine the priority of a node.
  */
@@ -41,9 +44,9 @@ export function bestFirstTreeSearch<S, A>(
  */
 export function bestFirstGraphSearch<S, A>(
   problem: SearchProblem<S, A>,
-  evalFn: (state: S) => number
+  evalFn: EvaluationFunction<S, A>
 ) {
-  const frontier = new Heap<STNode<S, A>>((a, b) => evalFn(a.state) - evalFn(b.state));
+  const frontier = new Heap<STNode<S, A>>((a, b) => evalFn(a) - evalFn(b));
   const explored = new Set<S>();
   const root = new STNode<S, A>(problem.initialState);
 

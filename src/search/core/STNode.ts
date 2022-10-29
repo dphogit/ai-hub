@@ -7,6 +7,9 @@ import { SearchProblem } from "../problems";
  * - parent: The parent node of the node.
  * - action: The action that was applied to the parent node to get to this node.
  * - pathCost: The cost of the path from the root node to this node.
+ *
+ * The type generics of S and A represent the state and action types respectively.
+ * An action is what is used to transition from one state to another.
  */
 export class STNode<S, A> {
   depth: number;
