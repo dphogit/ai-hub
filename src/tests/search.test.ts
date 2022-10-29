@@ -1,5 +1,4 @@
-import { SlidingTiles } from "../search";
-import { aStarSearch } from "../search/algorithms/a-star-search";
+import { SlidingTiles, aStarSearch, greedySearch } from "../search";
 
 describe('sliding tiles', () =>  {
   const eightPuzzle = new SlidingTiles({
@@ -75,25 +74,43 @@ describe('sliding tiles', () =>  {
         expect(aStarSearch(eightPuzzle1, eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1))?.pathCost).toBe(2);
         expect(aStarSearch(eightPuzzle1, eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1))?.pathCost).toBe(2);
       })
-
       test('puzzle 2', () => {
         expect(aStarSearch(eightPuzzle2, eightPuzzle2.misplacedTilesHeuristic.bind(eightPuzzle2))?.pathCost).toBe(8);
         expect(aStarSearch(eightPuzzle2, eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2))?.pathCost).toBe(8);
       })
-
       test('puzzle 3', () => {
         expect(aStarSearch(eightPuzzle3, eightPuzzle3.misplacedTilesHeuristic.bind(eightPuzzle3))?.pathCost).toBe(16);
         expect(aStarSearch(eightPuzzle3, eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3))?.pathCost).toBe(16);
       })
-
       // Use Manhattan distance only for these harder puzzles to get faster results
-
       test('puzzle 4', () => {
         expect(aStarSearch(eightPuzzle4, eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4))?.pathCost).toBe(22);
       })
-
       test('puzzle 5', () => {
         expect(aStarSearch(eightPuzzle5, eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5))?.pathCost).toBe(24);
+      })
+    })
+
+    describe('greedy search', () => {
+      test('puzzle 1', () => {
+        expect(greedySearch(eightPuzzle1, eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+        expect(greedySearch(eightPuzzle1, eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+      })
+      test('puzzle 2', () => {
+        expect(greedySearch(eightPuzzle2, eightPuzzle2.misplacedTilesHeuristic.bind(eightPuzzle2))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+        expect(greedySearch(eightPuzzle2, eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+      })
+      test('puzzle 3', () => {
+        expect(greedySearch(eightPuzzle3, eightPuzzle3.misplacedTilesHeuristic.bind(eightPuzzle3))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+        expect(greedySearch(eightPuzzle3, eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+      })
+      test('puzzle 4', () => {
+        expect(greedySearch(eightPuzzle4, eightPuzzle4.misplacedTilesHeuristic.bind(eightPuzzle4))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+        expect(greedySearch(eightPuzzle4, eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+      })
+      test('puzzle 5', () => {
+        expect(greedySearch(eightPuzzle5, eightPuzzle5.misplacedTilesHeuristic.bind(eightPuzzle4))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+        expect(greedySearch(eightPuzzle5, eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5))?.state).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 0]);
       })
     })
   })
