@@ -48,7 +48,7 @@ export function bestFirstGraphSearch<S, A>(
   evalFn: EvaluationFunction<S, A>
 ) {
   const frontier = new Heap<STNode<S, A>>((a, b) => evalFn(a) - evalFn(b));
-  const explored = Set<S>();
+  let explored = Set<S>();
   const root = new STNode<S, A>(problem.initialState);
 
   frontier.push(root);
@@ -60,11 +60,9 @@ export function bestFirstGraphSearch<S, A>(
       return node;
     }
 
-    explored.add(node.state);
+    explored = explored.add(node.state);
 
     node.expand(problem).forEach((child) => {
-      // TODO Need object value equality, currently only checks reference equality hence
-      // this is insufficient to check if a state has been explored.
       if (!explored.has(child.state)) {
         frontier.push(child);
       }

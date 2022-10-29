@@ -1,6 +1,7 @@
 import { SearchProblem } from "../core";
+import { List } from "immutable";
 
-type STState = number[];
+type STState = List<number>;
 type STAction = "U" | "L" | "R" | "D";
 
 /**
@@ -14,7 +15,6 @@ type STAction = "U" | "L" | "R" | "D";
  * and R is right to indicate which way to move the empty/blank tile which will swap
  * with the tile in that direction.
  *
- * TODO Use immutable list from library.
  */
 export class SlidingTiles extends SearchProblem<STState, STAction> {
 
@@ -25,13 +25,17 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
   // Only one specific goal state
   constructor(config: { initialState: STState, goalState: STState }) {
     super(config);
-    this.n = Math.sqrt(config.initialState.length);
+    this.n = Math.sqrt(config.initialState.size);
   }
 
-  private static swapTiles(state: STState, i1: number, i2: number): void {
-    const temp = state[i1];
-    state[i1] = state[i2];
-    state[i2] = temp;
+  private static swapTiles(state: STState, i1: number, i2: number): STState {
+    return state.withMutations(s => {
+      const t1 = s.get(i1);
+      const t2 = s.get(i2);
+      if (t1 !== undefined && t2 !== undefined) {
+        s.set(i1, t2).set(i2, t1);
+      }
+    })
   }
 
   // Calculate the index delta to move the empty tile within in the array
@@ -46,13 +50,9 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
 
   // Swap the empty tile with the tile in the given direction
   getActionResult(state: STState, action: STAction): STState {
-    const newState = [...state];
     const blankIndex = state.indexOf(SlidingTiles.BLANK_TILE);
     const neighbourIndex = blankIndex + this.calcDelta(action);
-
-    SlidingTiles.swapTiles(newState, blankIndex, neighbourIndex)
-
-    return newState;
+    return SlidingTiles.swapTiles(state, blankIndex, neighbourIndex)
   }
 
   // Only return actions that will not move the empty tile out of bounds
@@ -61,7 +61,7 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
     const emptyTileIndex = state.indexOf(0);
 
     const isOnTopRow = emptyTileIndex < this.n;
-    const isOnBottomRow = emptyTileIndex >= state.length - this.n;
+    const isOnBottomRow = emptyTileIndex >= state.size - this.n;
     const isOnLeftColumn = emptyTileIndex % this.n === 0;
     const isOnRightColumn = emptyTileIndex % this.n === this.n - 1;
 
@@ -85,9 +85,15 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
   static isSolvable(state: STState): boolean {
     let inversions = 0;
 
-    for (let i = 0; i < state.length; i++) {
-      for (let j = i + 1; j < state.length; j++) {
-        if (state[i] !== 0 && state[j] !== 0 && state[i] > state[j]) {
+    for (let i = 0; i < state.size; i++) {
+      const iTile = state.get(i)!;
+      if (iTile === SlidingTiles.BLANK_TILE) {
+        continue;
+      }
+
+      for (let j = i + 1; j < state.size; j++) {
+        const jTile = state.get(j)!;
+        if (jTile !== SlidingTiles.BLANK_TILE && iTile > jTile) {
           inversions++;
         }
       }
@@ -97,7 +103,7 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
   }
 
   isGoal(state: STState): boolean {
-    return this.goalState !== undefined && this.goalState.every((val, i) => val === state[i]);
+    return this.goalState !== undefined && this.goalState.every((val, i) => val === state.get(i));
   }
 
   // Counts the number of tiles that are not in their correct position (excl. blank tile)
@@ -108,7 +114,7 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
       }
 
       const isBlankTile = val === SlidingTiles.BLANK_TILE;
-      const isSameTile = val === this.goalState[i];
+      const isSameTile = val === this.goalState.get(i);
       return !isBlankTile && !isSameTile ? acc + 1 : acc;
     }, 0);
   }
