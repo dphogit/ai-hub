@@ -37,4 +37,12 @@ describe('SlidingTiles', () =>  {
     expect(eightPuzzle.isSolvable([1, 2, 3, 4, 5, 6, 8, 7])).toBe(false);
     expect(eightPuzzle.isSolvable([8, 1, 2, 0, 4, 3, 7, 6, 5])).toBe(false);
   })
+
+  test('misplaced tiles heuristic', () => {
+    expect(eightPuzzle.misplacedTilesHeuristic([1, 2, 3, 4, 5, 6, 7, 8, 0])).toBe(0);
+    expect(eightPuzzle.misplacedTilesHeuristic([1, 2, 3, 4, 5, 6, 7, 0, 8])).toBe(1);
+    expect(eightPuzzle.misplacedTilesHeuristic([1, 2, 3, 4, 5, 6, 0, 7, 8])).toBe(2);
+    expect(eightPuzzle.misplacedTilesHeuristic([3, 1, 2, 6, 4, 5, 0, 7, 8])).toBe(8);
+    expect(eightPuzzle.misplacedTilesHeuristic([0, 1, 2, 3, 4, 5, 6, 7, 8])).toBe(8);
+  })
 })

@@ -70,7 +70,6 @@ abstract class SearchProblem<S, A> {
 export class SlidingTiles extends SearchProblem<STState, STAction> {
 
   static BLANK_TILE = 0;
-  static MOVE_COST = 1;
 
   n: number;
 
@@ -93,7 +92,7 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
 
   // Cost of moving a tile is always 1
   getActionCost(state1: STState, action: STAction, state2: STState): number {
-    return SlidingTiles.MOVE_COST;
+    return 1;
   }
 
   // Swap the empty tile with the tile in the given direction
@@ -152,8 +151,17 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
     return this.goalState !== undefined && this.goalState.every((val, i) => val === state[i]);
   }
 
+  // Counts the number of tiles that are not in their correct position (excl. blank tile)
   misplacedTilesHeuristic(state: STState): number {
-    throw new Error("Not implemented");
+    return state.reduce((acc, val, i) => {
+      if (this.goalState) {
+        const isBlankTile = val === SlidingTiles.BLANK_TILE;
+        const isSameTile = val === this.goalState[i];
+        return !isBlankTile && !isSameTile ? acc + 1 : acc;
+      }
+
+      throw new Error('Goal state is not defined - for this problem a goal state is required');
+    }, 0);
   }
 
   manhattanDistanceHeuristic(state: STState): number {
