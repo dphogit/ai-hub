@@ -67,7 +67,7 @@ abstract class SearchProblem<S, A> {
  * and R is right to indicate which way to move the empty/blank tile which will swap
  * with the tile in that direction.
  */
-class SlidingTiles extends SearchProblem<STState, STAction> {
+export class SlidingTiles extends SearchProblem<STState, STAction> {
 
   static BLANK_TILE = 0;
   static MOVE_COST = 1;
