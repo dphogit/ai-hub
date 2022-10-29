@@ -1,4 +1,4 @@
-import { SearchProblem } from "./problems";
+import { SearchProblem } from "../problems";
 
 /**
  * Represents a node in the search tree. A node consists of:
@@ -8,7 +8,7 @@ import { SearchProblem } from "./problems";
  * - action: The action that was applied to the parent node to get to this node.
  * - pathCost: The cost of the path from the root node to this node.
  */
-class STNode<S, A> {
+export class STNode<S, A> {
   depth: number;
 
   constructor(

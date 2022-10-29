@@ -1,4 +1,4 @@
-import { SearchProblem } from "./SearchProblem";
+import { SearchProblem } from "../core";
 
 type STState = number[];
 type STAction = "U" | "L" | "R" | "D";

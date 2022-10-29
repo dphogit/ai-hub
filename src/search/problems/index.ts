@@ -1,2 +1,2 @@
-export { SearchProblem } from './SearchProblem';
-export { SlidingTiles } from './SlidingTiles';
+export * from '../core/SearchProblem';
+export * from './SlidingTiles';

@@ -1,4 +1,4 @@
-import { SlidingTiles } from "../search/problems";
+import { SlidingTiles } from "../search";
 
 describe('SlidingTiles', () =>  {
   const eightPuzzle = new SlidingTiles({
@@ -56,4 +56,11 @@ describe('SlidingTiles', () =>  {
   test('action cost', () => {
     expect(eightPuzzle.getActionCost([1, 2, 3, 4, 5, 6, 7, 0, 8], 'R', [1, 2, 3, 4, 5, 6, 7, 8, 0])).toBe(1);
   })
+})
+
+describe('Algorithms', () => {
+  const eightPuzzle = new SlidingTiles({
+    initialState: [1, 2, 3, 4, 5, 7, 8, 6, 0],
+    goalState: [1, 2, 3, 4, 5, 6, 7, 8, 0]
+  });
 })
