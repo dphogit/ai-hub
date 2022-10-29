@@ -154,17 +154,32 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
   // Counts the number of tiles that are not in their correct position (excl. blank tile)
   misplacedTilesHeuristic(state: STState): number {
     return state.reduce((acc, val, i) => {
-      if (this.goalState) {
-        const isBlankTile = val === SlidingTiles.BLANK_TILE;
-        const isSameTile = val === this.goalState[i];
-        return !isBlankTile && !isSameTile ? acc + 1 : acc;
+      if (!this.goalState) {
+        throw new Error('Goal state is not defined - for this problem a goal state is required');
       }
 
-      throw new Error('Goal state is not defined - for this problem a goal state is required');
+      const isBlankTile = val === SlidingTiles.BLANK_TILE;
+      const isSameTile = val === this.goalState[i];
+      return !isBlankTile && !isSameTile ? acc + 1 : acc;
     }, 0);
   }
 
+  // Counts the sum of the manhattan distances of each tile from its correct position
   manhattanDistanceHeuristic(state: STState): number {
-    throw new Error("Not implemented");
+    return state.reduce((acc, val, i) => {
+      if (!this.goalState) {
+        throw new Error('Goal state is not defined - for this problem a goal state is required');
+      }
+
+      if (val === SlidingTiles.BLANK_TILE) {
+        return acc;
+      }
+
+      const goalIndex = this.goalState.indexOf(val);
+      const deltaVert = Math.abs(Math.floor(goalIndex / this.n) - Math.floor(i / this.n));
+      const deltaHor = Math.abs((goalIndex % this.n) - (i % this.n));
+      const manhattanDistance = deltaVert + deltaHor;
+      return acc + manhattanDistance;
+    }, 0);
   }
 }

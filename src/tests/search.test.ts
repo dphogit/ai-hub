@@ -45,4 +45,11 @@ describe('SlidingTiles', () =>  {
     expect(eightPuzzle.misplacedTilesHeuristic([3, 1, 2, 6, 4, 5, 0, 7, 8])).toBe(8);
     expect(eightPuzzle.misplacedTilesHeuristic([0, 1, 2, 3, 4, 5, 6, 7, 8])).toBe(8);
   })
+
+  test('manhattan distance heuristic', () => {
+    expect(eightPuzzle.manhattanDistanceHeuristic([1, 2, 3, 4, 5, 6, 7, 8, 0])).toBe(0);
+    expect(eightPuzzle.manhattanDistanceHeuristic([1, 2, 3, 4, 5, 6, 7, 0, 8])).toBe(1);
+    expect(eightPuzzle.manhattanDistanceHeuristic([0, 1, 2, 3, 4, 5, 6, 7, 8])).toBe(12);
+    expect(eightPuzzle.manhattanDistanceHeuristic([7, 2, 4, 5, 0, 6, 8, 3, 1])).toBe(14);
+  })
 })
