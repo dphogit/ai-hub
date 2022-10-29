@@ -1,5 +1,5 @@
-import { HeuristicFunction, SearchProblem, STNode } from "../core";
-import { bestFirstGraphSearch, bestFirstTreeSearch } from "./best-first-search";
+import { HeuristicFunction, SearchProblem } from "../core";
+import { bestFirstSearch } from "./best-first-search";
 
 /**
  * Greedy best first search is a specific best-first search algorithm with the evaluation function
@@ -21,6 +21,5 @@ export function greedySearch<S, A>(
   heuristicFn: HeuristicFunction<S>,
   isTreeSearch = false
 ) {
-  const evalFn = (node: STNode<S, A>) => heuristicFn(node.state);
-  return isTreeSearch ? bestFirstTreeSearch(problem, evalFn) : bestFirstGraphSearch(problem, evalFn);
+  return bestFirstSearch(problem, (node) => heuristicFn(node.state), !isTreeSearch);
 }

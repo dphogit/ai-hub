@@ -1,5 +1,5 @@
 import { List } from "immutable";
-import { SlidingTiles, aStarSearch, greedySearch } from "../search";
+import { SlidingTiles, aStarSearch, greedySearch, uniformCostSearch } from "../search";
 
 describe('sliding tiles', () =>  {
   const eightPuzzle = new SlidingTiles({
@@ -69,7 +69,7 @@ describe('sliding tiles', () =>  {
     const eightPuzzle4 = new SlidingTiles({initialState: List([3, 1, 6, 5, 8, 7, 0, 2, 4]), goalState: List([1, 2, 3, 4, 5, 6, 7, 8, 0])});
     const eightPuzzle5 = new SlidingTiles({initialState: List([4, 2, 1, 6, 0, 5, 3, 8, 7]), goalState: List([1, 2, 3, 4, 5, 6, 7, 8, 0])});
 
-    // A* uses best first search best first search algorithm implicitly
+    // A* uses best first search best first search algorithm implicitly (f = g + h)
     describe('A*', () => {
       test('puzzle 1', () => {
         expect(aStarSearch(eightPuzzle1, eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1))?.pathCost).toBe(2);
@@ -93,8 +93,8 @@ describe('sliding tiles', () =>  {
       })
     })
 
-
-    describe('greedy search', () => {
+    // Greedy uses best first search algorithm implicitly (f = h)
+    describe('greedy', () => {
       test('puzzle 1', () => {
         expect(greedySearch(eightPuzzle1, eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
         expect(greedySearch(eightPuzzle1, eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
@@ -114,6 +114,30 @@ describe('sliding tiles', () =>  {
       test('puzzle 5', () => {
         expect(greedySearch(eightPuzzle5, eightPuzzle5.misplacedTilesHeuristic.bind(eightPuzzle5))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
         expect(greedySearch(eightPuzzle5, eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      })
+    })
+
+    // Uniform cost search uses best first search algorithm implicitly (f = g)
+    describe('uniform cost', () => {
+      test('puzzle 1', () => {
+        expect(uniformCostSearch(eightPuzzle1)?.pathCost).toBe(2);
+        expect(uniformCostSearch(eightPuzzle1)?.pathCost).toBe(2);
+      })
+      test('puzzle 2', () => {
+        expect(uniformCostSearch(eightPuzzle2)?.pathCost).toBe(8);
+        expect(uniformCostSearch(eightPuzzle2)?.pathCost).toBe(8);
+      })
+      test('puzzle 3', () => {
+        expect(uniformCostSearch(eightPuzzle3)?.pathCost).toBe(16);
+        expect(uniformCostSearch(eightPuzzle3)?.pathCost).toBe(16);
+      })
+      test('puzzle 4', () => {
+        expect(uniformCostSearch(eightPuzzle4)?.pathCost).toBe(22);
+        expect(uniformCostSearch(eightPuzzle4)?.pathCost).toBe(22);
+      })
+      test('puzzle 5', () => {
+        expect(uniformCostSearch(eightPuzzle5)?.pathCost).toBe(24);
+        expect(uniformCostSearch(eightPuzzle5)?.pathCost).toBe(24);
       })
     })
   })

@@ -1,6 +1,6 @@
 import { HeuristicFunction } from "../types";
-import { bestFirstGraphSearch, bestFirstTreeSearch } from "./best-first-search";
-import { SearchProblem, STNode } from "../core";
+import { bestFirstSearch } from "./best-first-search";
+import { SearchProblem } from "../core";
 
 /**
  * A* search is a specific best-first search algorithm with the evaluation function
@@ -13,6 +13,8 @@ import { SearchProblem, STNode } from "../core";
  *
  * It is guaranteed to find the optimal solution if the heuristic function is admissible.
  *
+ * <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* Search</a>
+ *
  * @param problem       The search problem to solve.
  * @param heuristicFn   The heuristic function to use to estimate the cost of the cheapest path
  *                      from n to a goal.
@@ -24,6 +26,5 @@ export function aStarSearch<S, A>(
   heuristicFn: HeuristicFunction<S>,
   isTreeSearch = false
 ) {
-  const evalFn = (node: STNode<S, A>) => node.pathCost + heuristicFn(node.state);
-  return isTreeSearch ? bestFirstTreeSearch(problem, evalFn) : bestFirstGraphSearch(problem, evalFn);
+  return bestFirstSearch(problem, (node) => node.pathCost + heuristicFn(node.state), !isTreeSearch);
 }
