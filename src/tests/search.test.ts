@@ -1,13 +1,12 @@
 import { SlidingTiles } from "../search/problems";
 
-// TODO Set up with typescript
-describe('SlidingTiles', () => {
+describe('SlidingTiles', () =>  {
   const eightPuzzle = new SlidingTiles({
     initialState: [1, 2, 3, 4, 5, 7, 8, 6, 0],
     goalState: [1, 2, 3, 4, 5, 6, 7, 8, 0]
   });
 
-  test('sliding tiles actions', () => {
+  test('actions', () => {
     expect(eightPuzzle.getActions([0, 1, 2, 3, 4, 5, 6, 7, 8])).toEqual(new Set(['R', 'D']));
     expect(eightPuzzle.getActions([1, 0, 2, 3, 4, 5, 6, 7, 8])).toEqual(new Set(['L', 'R', 'D']));
     expect(eightPuzzle.getActions([1, 2, 0, 3, 4, 5, 6, 7, 8])).toEqual(new Set(['L', 'D']));
@@ -19,15 +18,23 @@ describe('SlidingTiles', () => {
     expect(eightPuzzle.getActions([1, 2, 3, 4, 5, 6, 7, 8, 0])).toEqual(new Set(['U', 'L']));
   })
 
-  test('sliding tiles action results', () => {
+  test('action results', () => {
     expect(eightPuzzle.getActionResult([0, 1, 2, 3, 4, 5, 6, 7, 8], 'R')).toEqual([1, 0, 2, 3, 4, 5, 6, 7, 8]);
     expect(eightPuzzle.getActionResult([0, 1, 2, 3, 4, 5, 6, 7, 8], 'D')).toEqual([3, 1, 2, 0, 4, 5, 6, 7, 8]);
     expect(eightPuzzle.getActionResult([1, 0, 2, 3, 4, 5, 6, 7, 8], 'L')).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
     expect(eightPuzzle.getActionResult([1, 2, 3, 4, 0, 5, 6, 7, 8], 'U')).toEqual([1, 0, 3, 4, 2, 5, 6, 7, 8]);
   })
 
-  test('sliding tiles goal', () => {
+  test('goal', () => {
     expect(eightPuzzle.isGoal([1, 2, 3, 4, 5, 6, 7, 8, 0])).toBe(true);
     expect(eightPuzzle.isGoal([0, 1, 2, 3, 4, 5, 6, 7, 8])).toBe(false);
+  })
+
+  test('solvable', () => {
+    expect(eightPuzzle.isSolvable([0, 1, 2, 3, 4, 5, 6, 7, 8])).toBe(true);
+    expect(eightPuzzle.isSolvable([1, 2, 3, 4, 5, 6, 7, 8, 0])).toBe(true);
+    expect(eightPuzzle.isSolvable([1, 2, 3, 4, 0, 6, 7, 5, 8])).toBe(true);
+    expect(eightPuzzle.isSolvable([1, 2, 3, 4, 5, 6, 8, 7])).toBe(false);
+    expect(eightPuzzle.isSolvable([8, 1, 2, 0, 4, 3, 7, 6, 5])).toBe(false);
   })
 })

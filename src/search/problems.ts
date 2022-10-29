@@ -133,6 +133,21 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
     return possibleActions;
   }
 
+  // A state is solvable if the number of inversions is not odd (i.e. is even)
+  isSolvable(state: STState): boolean {
+    let inversions = 0;
+
+    for (let i = 0; i < state.length; i++) {
+      for (let j = i + 1; j < state.length; j++) {
+        if (state[i] !== 0 && state[j] !== 0 && state[i] > state[j]) {
+          inversions++;
+        }
+      }
+    }
+
+    return inversions % 2 === 0;
+  }
+
   isGoal(state: STState): boolean {
     return this.goalState !== undefined && this.goalState.every((val, i) => val === state[i]);
   }
