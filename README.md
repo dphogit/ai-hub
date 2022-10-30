@@ -1,8 +1,8 @@
-## AI Hub
+# AI Hub
+
+AI stuff using Vite and TypeScript.
 
 ## Install
-
-This project uses `package.json`, install dependencies:
 
 ```bash
 npm install
@@ -10,15 +10,11 @@ npm install
 
 ## Build
 
-Compiles typescript to javascript
-
 ```bash
 npm start
 ```
 
-## Development Mode
-
-Compiles typescript to javascript and watches for changes
+## Development
 
 ```bash
 npm run dev
