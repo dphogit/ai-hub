@@ -27,6 +27,7 @@ export function createPuzzleBoard() {
   return new PuzzleBoard(boardElement, scrambleBtn, solveBtn);
 }
 
+// TODO Update the UI during search - observer pattern?
 export class PuzzleBoard {
   static DEFAULT_N = 3;
 
