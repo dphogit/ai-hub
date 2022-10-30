@@ -49,3 +49,18 @@ body {
 .board__tile--blank {
   background-color: gray;
 }
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.controls__button {
+  font-size: 20px;
+  padding: 8px 20px;
+  width: 150px;
+  cursor: pointer;
+}

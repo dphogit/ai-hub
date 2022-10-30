@@ -1,4 +1,5 @@
-import { SlidingTiles } from "../search";
+import { Puzzle, SlidingTiles } from "../search";
+import { List } from "immutable";
 
 export function createTile(val: number) {
   const tile = document.createElement('div');
@@ -15,19 +16,28 @@ export function createTile(val: number) {
   return tile;
 }
 
-function shufflePuzzle(puzzle: number[]) {
-  for (let i = puzzle.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [puzzle[i], puzzle[j]] = [puzzle[j], puzzle[i]];
-  }
+function createSolvedPuzzle(n: number): Puzzle {
+   const puzzle = [];
+    for (let i = 1; i < n * n; i++) {
+      puzzle.push(i);
+    }
+    puzzle.push(SlidingTiles.BLANK_TILE);
+    return List(puzzle);
 }
 
-// Produce a random puzzle of size n x n
-export function generateRandomPuzzle(n: number) {
-  const puzzle = []
-  for (let i = 0; i < n * n; i++) {
-    puzzle.push(i);
+function shufflePuzzle(puzzle: Puzzle) {
+  const shuffled = puzzle.toArray();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-  shufflePuzzle(puzzle);
-  return puzzle;
+  return List(shuffled);
+}
+
+export function generateRandomPuzzle(n: number) {
+  const solved = createSolvedPuzzle(n);
+  while (true) {
+    const shuffled = shufflePuzzle(solved);
+    if (SlidingTiles.isSolvable(shuffled)) return { solved, shuffled };
+  }
 }

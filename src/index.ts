@@ -1,10 +1,11 @@
 import { createTile, generateRandomPuzzle } from "./ui";
+import { Puzzle } from "./search";
 
-function setupPuzzleBoard(puzzle: number[]) {
+function setupPuzzleBoard(puzzle: Puzzle) {
   const board = document.querySelector('.board__puzzle');
   if (!board) return;
 
-  const n = Math.sqrt(puzzle.length);
+  const n = Math.sqrt(puzzle.size);
 
   board.classList.add('board');
   board.setAttribute('style', `
@@ -18,8 +19,8 @@ function setupPuzzleBoard(puzzle: number[]) {
 }
 
 function main() {
-  const puzzle = generateRandomPuzzle(3);
-  setupPuzzleBoard(puzzle);
+  const { solved, shuffled } = generateRandomPuzzle(3);
+  setupPuzzleBoard(shuffled);
 }
 
 main();
