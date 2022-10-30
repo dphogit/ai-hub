@@ -25,7 +25,7 @@ function createSolvedPuzzle(n: number): Puzzle {
     return List(puzzle);
 }
 
-function shufflePuzzle(puzzle: Puzzle) {
+function shufflePuzzle(puzzle: Puzzle): Puzzle {
   const shuffled = puzzle.toArray();
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

@@ -1,26 +1,112 @@
 import { createTile, generateRandomPuzzle } from "./ui";
-import { Puzzle } from "./search";
+import { aStarSearch, Puzzle, SlidingTiles } from "./search";
 
-function setupPuzzleBoard(puzzle: Puzzle) {
-  const board = document.querySelector('.board__puzzle');
-  if (!board) return;
+function createBoard() {
+  const boardElement = document.querySelector('.board__puzzle');
+  const scrambleBtn = document.querySelector('.controls__button--scramble');
+  const solveBtn = document.querySelector('.controls__button--solve');
+  if (!boardElement || !scrambleBtn || !solveBtn) {
+    throw new Error('Could not find elements');
+  }
 
-  const n = Math.sqrt(puzzle.size);
+  return new Board(boardElement, scrambleBtn, solveBtn);
+}
 
-  board.classList.add('board');
-  board.setAttribute('style', `
-    grid-template-columns: repeat(${n}, 1fr); 
-    grid-template-rows: repeat(${n}, 1fr);
-  `);
+class Board {
+  static DEFAULT_N = 3;
 
-  puzzle.forEach((tile) => {
-    board.appendChild(createTile(tile));
-  });
+  puzzle: Puzzle;
+  solution: Puzzle;
+
+  constructor(
+    public boardElement: Element,
+    public scrambleBtn: Element,
+    public solveBtn: Element,
+    public n: number = Board.DEFAULT_N,
+  ) {
+    const { shuffled, solved } = generateRandomPuzzle(n);
+    this.puzzle = shuffled;
+    this.solution = solved;
+
+    this.populateBoard(shuffled);
+    this.scrambleBtn.addEventListener('click', this.scramble.bind(this));
+    this.solveBtn.addEventListener('click', this.solve.bind(this));
+  }
+
+  scramble() {
+    const { solved, shuffled } = generateRandomPuzzle(3);
+    this.puzzle = shuffled;
+    this.solution = solved;
+    this.clearAndPopulateBoard(shuffled);
+  }
+
+  solve() {
+    const slidingTiles = new SlidingTiles({ initialState: this.puzzle, goalState: this.solution });
+
+    this.disableScramble();
+    this.disableSolve();
+    console.log('Solving...');
+
+    try {
+      const node = aStarSearch(slidingTiles, slidingTiles.misplacedTilesHeuristic.bind(slidingTiles));
+      if (!node) {
+        alert('No solution found');
+        return;
+      }
+      this.clearAndPopulateBoard(node.state);
+      console.log('Solved!');
+    } catch (e) {
+      console.error('Error solving puzzle');
+      alert('Something went wrong during Solving!')
+    } finally {
+      this.enableScramble();
+      this.enableSolve();
+    }
+  }
+
+  clearBoard() {
+    while (this.boardElement.firstChild) {
+      this.boardElement.removeChild(this.boardElement.firstChild);
+    }
+  }
+
+  populateBoard(puzzle: Puzzle) {
+    const n = Math.sqrt(puzzle.size);
+
+    this.boardElement.setAttribute('style', `
+      grid-template-columns: repeat(${n}, 1fr); 
+      grid-template-rows: repeat(${n}, 1fr);
+    `);
+
+    puzzle.forEach((tile) => {
+      this.boardElement.appendChild(createTile(tile));
+    });
+  }
+
+  clearAndPopulateBoard(puzzle: Puzzle) {
+    this.clearBoard();
+    this.populateBoard(puzzle);
+  }
+
+  enableScramble() {
+    this.scrambleBtn?.removeAttribute('disabled');
+  }
+
+  disableScramble() {
+    this.scrambleBtn?.setAttribute('disabled', 'true');
+  }
+
+  enableSolve() {
+    this.solveBtn?.removeAttribute('disabled');
+  }
+
+  disableSolve() {
+    this.solveBtn?.setAttribute('disabled', 'true');
+  }
 }
 
 function main() {
-  const { solved, shuffled } = generateRandomPuzzle(3);
-  setupPuzzleBoard(shuffled);
+  createBoard();
 }
 
 main();
