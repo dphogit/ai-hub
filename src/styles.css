@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+:root {
+  --tile-length: 100px;
+
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.layout {
+  margin: 0 auto;
+  width: 720px;
+}
+
+.board {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.board__puzzle {
+  display: grid;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: saddlebrown;
+  outline: 3px solid black;
+}
+
+.board__tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: var(--tile-length);
+  width: var(--tile-length);
+  font-size: 3.5rem;
+  outline: 3px solid black;
+}
+
+.board__tile--number {
+  background-color: palegoldenrod;
+  font-weight: 500;
+}
+
+.board__tile--blank {
+  background-color: gray;
+}
