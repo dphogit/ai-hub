@@ -1,21 +1,6 @@
 import { Puzzle, SlidingTiles } from "../search";
 import { List } from "immutable";
 
-export function createTile(val: number) {
-  const tile = document.createElement('div');
-  tile.classList.add('board__tile');
-
-  if (val === SlidingTiles.BLANK_TILE) {
-    tile.classList.add('board__tile--blank');
-  } else {
-    tile.id = `tile-${val}`;
-    tile.textContent = val.toString();
-    tile.classList.add('board__tile--number');
-  }
-
-  return tile;
-}
-
 function createSolvedPuzzle(n: number): Puzzle {
    const puzzle = [];
     for (let i = 1; i < n * n; i++) {

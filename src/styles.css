@@ -16,13 +16,13 @@ body {
   width: 720px;
 }
 
-.board {
+.board__wrapper {
   display: flex;
   justify-content: center;
   margin: 24px 0;
 }
 
-.board__puzzle {
+.board {
   display: grid;
   margin: 0 auto;
   padding: 16px;
