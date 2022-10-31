@@ -1,2 +1,2 @@
 export * from './util';
-export * from './puzzle-board';
+export * from './PuzzleBoard';
