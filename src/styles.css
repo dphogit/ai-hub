@@ -64,3 +64,8 @@ body {
   width: 150px;
   cursor: pointer;
 }
+
+.stats__count {
+  font-size: 20px;
+  text-align: center;
+}

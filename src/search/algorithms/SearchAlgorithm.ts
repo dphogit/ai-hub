@@ -1,12 +1,4 @@
-import { STNode } from "../core";
-import { SearchProblem } from "../core";
-
-interface Observer<E extends string, T> {
-  update: (event: E, data?: T) => void;
-}
-
-type SearchAlgorithmEvent = "expand" | "found" | "fail";
-type NodeListener<S, A> = Observer<SearchAlgorithmEvent, STNode<S, A>>;
+import { STNode, SearchProblem, NodeListener } from "../core";
 
 export default abstract class SearchAlgorithm<S, A> {
   nodeListeners: NodeListener<S, A>[] = [];
@@ -23,7 +15,7 @@ export default abstract class SearchAlgorithm<S, A> {
     this.nodeListeners = this.nodeListeners.filter(l => l !== listener);
   }
 
-  protected notifyNodeListeners(event: SearchAlgorithmEvent, data?: STNode<S, A>) {
-    this.nodeListeners.forEach(listener => listener.update(event, data));
+  protected notifyNodeListeners(node: STNode<S, A>) {
+    this.nodeListeners.forEach(listener => listener.update(node));
   }
 }

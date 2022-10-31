@@ -26,6 +26,11 @@ export class PuzzleBoard {
     this.puzzle = shuffled;
     this.solution = solved;
 
+    const n = Math.sqrt(this.puzzle.size);
+    this.boardEl.setAttribute('style', `
+      grid-template-columns: repeat(${n}, 1fr); 
+      grid-template-rows: repeat(${n}, 1fr);
+    `);
     this.populate(shuffled);
   }
 
@@ -36,17 +41,13 @@ export class PuzzleBoard {
   }
 
   populate(puzzle: Puzzle) {
-    const n = Math.sqrt(puzzle.size);
-    this.boardEl.setAttribute('style', `
-      grid-template-columns: repeat(${n}, 1fr); 
-      grid-template-rows: repeat(${n}, 1fr);
-    `);
     puzzle.forEach((tile) => {
       this.boardEl.appendChild(createTile(tile));
     });
   }
 
   update(puzzle: Puzzle) {
+    this.puzzle = puzzle;
     this.clear();
     this.populate(puzzle);
   }
@@ -56,15 +57,5 @@ export class PuzzleBoard {
     this.puzzle = shuffled;
     this.solution = solved;
     this.update(shuffled);
-  }
-
-  solve(algo: SearchAlgorithm<Puzzle, PuzzleAction>) {
-    const slidingTiles = new SlidingTiles({ initialState: this.puzzle, goalState: this.solution });
-    const solutionNode = algo.findSolution(slidingTiles);
-    if (solutionNode) {
-      this.update(solutionNode.state);
-      return solutionNode;
-    }
-    return null;
   }
 }

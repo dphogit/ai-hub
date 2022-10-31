@@ -12,3 +12,8 @@ export interface SearchProblemConfig<S> {
 export type Puzzle = List<number>;
 export type PuzzleAction = "U" | "L" | "R" | "D";
 
+export interface Listener<T> {
+  update: (data: T) => void;
+}
+
+export type NodeListener<S, A> = Listener<STNode<S, A>>;

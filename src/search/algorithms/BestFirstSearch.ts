@@ -32,7 +32,6 @@ export class BestFirstSearch<S, A> extends SearchAlgorithm<S, A> {
       const node = frontier.pop()!;
 
       if (problem.isGoal(node.state)) {
-        this.notifyNodeListeners('found', node);
         return node;
       }
 
@@ -45,11 +44,10 @@ export class BestFirstSearch<S, A> extends SearchAlgorithm<S, A> {
           frontier.push(child);
         }
       });
-      this.notifyNodeListeners('expand', node);
+      this.notifyNodeListeners(node);
     }
 
     // No solution found
-    this.notifyNodeListeners('fail');
     return null;
   }
 }
