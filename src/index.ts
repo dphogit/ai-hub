@@ -1,5 +1,5 @@
 import { hideElement, PuzzleBoard, showElement } from "./ui";
-import { AStarSearch, ExpansionListener, Puzzle, PuzzleAction, SlidingTiles, STNode } from "./search";
+import { AStarSearch, ExpansionListener, Puzzle, PuzzleAction, SlidingTiles } from "./search";
 
 const boardElement = document.querySelector('.board');
 if (!boardElement) throw new Error('Could not find board element');

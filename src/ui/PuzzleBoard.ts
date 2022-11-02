@@ -18,16 +18,16 @@ function createTile(val: number) {
 
 export class PuzzleBoard {
   static readonly DEFAULT_INTERVAL_MS = 200;
+  static readonly DEFAULT_N = 3;
 
   puzzle: Puzzle;
   solution: Puzzle;
 
-  constructor(public boardEl: Element) {
-    const { solved, shuffled } = generateRandomPuzzle(3);
+  constructor(public boardEl: Element, public n: number = PuzzleBoard.DEFAULT_N) {
+    const { solved, shuffled } = generateRandomPuzzle(PuzzleBoard.DEFAULT_N);
     this.puzzle = shuffled;
     this.solution = solved;
 
-    const n = Math.sqrt(this.puzzle.size);
     this.boardEl.setAttribute('style', `
       grid-template-columns: repeat(${n}, 1fr); 
       grid-template-rows: repeat(${n}, 1fr);
@@ -54,7 +54,7 @@ export class PuzzleBoard {
   }
 
   scramble() {
-    const { solved, shuffled } = generateRandomPuzzle(3);
+    const { solved, shuffled } = generateRandomPuzzle(PuzzleBoard.DEFAULT_N);
     this.puzzle = shuffled;
     this.solution = solved;
     this.update(shuffled);
