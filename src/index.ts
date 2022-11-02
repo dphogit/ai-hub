@@ -1,5 +1,6 @@
 import { PuzzleBoard } from "./ui";
-import { AStarSearch, NodeListener, Puzzle, PuzzleAction, SlidingTiles, UniformCostSearch } from "./search";
+import { AStarSearch, Puzzle, PuzzleAction, SlidingTiles, STNode } from "./search";
+import { ExpansionListener } from "./search/listeners/ExpansionListener";
 
 const boardElement = document.querySelector('.board');
 if (!boardElement) throw new Error('Could not find board element');
@@ -12,16 +13,54 @@ if (!scrambleBtn) throw new Error('Could not find scramble button');
 const solveBtn = document.querySelector('.controls__button--solve');
 if (!solveBtn) throw new Error('Could not find solve button');
 
-const expansionCounter = document.querySelector('#expansion-counter');
+const expansionCounter = document.querySelector('.stats__count');
 if (!expansionCounter) throw new Error('Could not find counter element');
 
 function updateExpansionCounter(count: number) {
-  if (expansionCounter) expansionCounter.textContent = count.toString();
+  if (expansionCounter) expansionCounter.textContent = 'Expansions: ' + count.toString();
+}
+
+function showElement(el: Element) {
+  el.classList.remove('hide');
+  el.classList.add('show');
+}
+
+function hideElement(el: Element) {
+  el.classList.remove('show');
+  el.classList.add('hide');
+}
+
+function hideAndResetExpansionCounter() {
+  if (expansionCounter) {
+    updateExpansionCounter(0);
+    hideElement(expansionCounter)
+  }
+}
+
+function showAndUpdateExpansionCounter(count: number) {
+  if (expansionCounter) {
+    updateExpansionCounter(count);
+    showElement(expansionCounter);
+  }
+}
+
+function animateSolution(board: PuzzleBoard, solution: STNode<Puzzle, PuzzleAction>, onComplete?: () => void) {
+  const solutionPath = solution.path();
+  const interval = setInterval(() => {
+    const node = solutionPath.shift();
+    if (node) {
+      board.update(node.state)
+    } else {
+      onComplete && onComplete();
+      clearInterval(interval);
+    }
+  }, 200);
 }
 
 function onClickScramble(board: PuzzleBoard) {
   return () => {
     board.scramble();
+    hideAndResetExpansionCounter();
   }
 }
 
@@ -36,30 +75,16 @@ function onClickSolve(board: PuzzleBoard) {
         goalState: board.solution
       });
 
-      let expansions = 0;
-      const listener: NodeListener<Puzzle, PuzzleAction> = {
-        update: (node) => {
-          expansions++;
-          if (expansions % 10000 === 0) {
-            updateExpansionCounter(expansions);
-          }
-        }
-      }
+      const expListener = new ExpansionListener();
 
-      // TODO Create input dropdown for selecting search algorithm
-      // const searchAlgo = new AStarSearch<Puzzle, PuzzleAction>(stProblem.manhattanDistanceHeuristic.bind(stProblem));
-      const searchAlgo = new UniformCostSearch<Puzzle, PuzzleAction>();
-      searchAlgo.addNodeListener(listener);
+      // TODO Add ability to configure search algorithm
+      const searchAlgo = new AStarSearch<Puzzle, PuzzleAction>(stProblem.manhattanDistanceHeuristic.bind(stProblem));
+      searchAlgo.addNodeListener(expListener);
 
-      // FIXME - Is blocking the UI thread - need to use web workers
+      // TODO Display feedback while solving (e.g loading sign)
       const solution = searchAlgo.findSolution(stProblem);
-      if (solution) {
-        board.update(solution.state);
-        updateExpansionCounter(expansions);
-      } else {
-        console.error('Failed to find solution');
-        alert('Failed to find solution');
-      }
+      if (solution) animateSolution(board, solution, () => showAndUpdateExpansionCounter(expListener.getCount()));
+      else alert('No solution found');  // Technically should never happen
 
     } catch(error) {
       console.error(error);

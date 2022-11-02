@@ -1,6 +1,5 @@
-import { Puzzle, PuzzleAction, SlidingTiles } from "../search";
+import { Puzzle, SlidingTiles } from "../search";
 import { generateRandomPuzzle } from "./util";
-import SearchAlgorithm from "../search/algorithms/SearchAlgorithm";
 
 function createTile(val: number) {
   const tile = document.createElement('div');
