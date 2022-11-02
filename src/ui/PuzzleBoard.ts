@@ -1,5 +1,5 @@
-import { Puzzle, SlidingTiles } from "../search";
-import { generateRandomPuzzle } from "./util";
+import { Puzzle, SlidingTiles, generateRandomPuzzle, STNode, PuzzleAction } from "../search";
+import { DisplayStepsOptions } from "./types";
 
 function createTile(val: number) {
   const tile = document.createElement('div');
@@ -17,6 +17,8 @@ function createTile(val: number) {
 }
 
 export class PuzzleBoard {
+  static readonly DEFAULT_INTERVAL_MS = 200;
+
   puzzle: Puzzle;
   solution: Puzzle;
 
@@ -57,4 +59,17 @@ export class PuzzleBoard {
     this.solution = solved;
     this.update(shuffled);
   }
+
+  displaySteps({path, onComplete, interval}: DisplayStepsOptions) {
+    const intervalId = setInterval(() => {
+      const node = path.shift();
+      if (node) {
+        this.update(node.state)
+      } else {
+        onComplete && onComplete();
+        clearInterval(intervalId);
+      }
+    }, interval || PuzzleBoard.DEFAULT_INTERVAL_MS);
+  }
+
 }

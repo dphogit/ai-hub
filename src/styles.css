@@ -62,6 +62,9 @@ body {
   font-size: 20px;
   padding: 8px 20px;
   width: 150px;
+}
+
+.controls__button:not(:disabled) {
   cursor: pointer;
 }
 

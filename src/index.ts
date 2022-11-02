@@ -1,6 +1,5 @@
-import { PuzzleBoard } from "./ui";
-import { AStarSearch, Puzzle, PuzzleAction, SlidingTiles, STNode } from "./search";
-import { ExpansionListener } from "./search/listeners/ExpansionListener";
+import { hideElement, PuzzleBoard, showElement } from "./ui";
+import { AStarSearch, ExpansionListener, Puzzle, PuzzleAction, SlidingTiles, STNode } from "./search";
 
 const boardElement = document.querySelector('.board');
 if (!boardElement) throw new Error('Could not find board element');
@@ -20,16 +19,6 @@ function updateExpansionCounter(count: number) {
   if (expansionCounter) expansionCounter.textContent = 'Expansions: ' + count.toString();
 }
 
-function showElement(el: Element) {
-  el.classList.remove('hide');
-  el.classList.add('show');
-}
-
-function hideElement(el: Element) {
-  el.classList.remove('show');
-  el.classList.add('hide');
-}
-
 function hideAndResetExpansionCounter() {
   if (expansionCounter) {
     updateExpansionCounter(0);
@@ -44,19 +33,6 @@ function showAndUpdateExpansionCounter(count: number) {
   }
 }
 
-function animateSolution(board: PuzzleBoard, solution: STNode<Puzzle, PuzzleAction>, onComplete?: () => void) {
-  const solutionPath = solution.path();
-  const interval = setInterval(() => {
-    const node = solutionPath.shift();
-    if (node) {
-      board.update(node.state)
-    } else {
-      onComplete && onComplete();
-      clearInterval(interval);
-    }
-  }, 200);
-}
-
 function onClickScramble(board: PuzzleBoard) {
   return () => {
     board.scramble();
@@ -66,31 +42,30 @@ function onClickScramble(board: PuzzleBoard) {
 
 function onClickSolve(board: PuzzleBoard) {
   return () => {
-    try {
-      scrambleBtn?.setAttribute('disabled', 'true');
-      solveBtn?.setAttribute('disabled', 'true');
+    scrambleBtn?.setAttribute('disabled', 'true');
+    solveBtn?.setAttribute('disabled', 'true');
 
-      const stProblem = new SlidingTiles({
-        initialState: board.puzzle,
-        goalState: board.solution
+    const stProblem = new SlidingTiles({
+      initialState: board.puzzle,
+      goalState: board.solution
+    });
+
+    // TODO Add ability to configure search algorithm
+    const searchAlgo = new AStarSearch<Puzzle, PuzzleAction>(stProblem.manhattanDistanceHeuristic.bind(stProblem));
+    const expListener = new ExpansionListener();
+    searchAlgo.addNodeListener(expListener);
+
+    // TODO Display feedback while solving (e.g loading sign)
+    const solution = searchAlgo.findSolution(stProblem);
+    if (solution) {
+      board.displaySteps({
+        path: solution.path(),
+        onComplete: () => {
+          showAndUpdateExpansionCounter(expListener.getCount());
+          scrambleBtn?.removeAttribute('disabled');
+          solveBtn?.removeAttribute('disabled');
+        }
       });
-
-      const expListener = new ExpansionListener();
-
-      // TODO Add ability to configure search algorithm
-      const searchAlgo = new AStarSearch<Puzzle, PuzzleAction>(stProblem.manhattanDistanceHeuristic.bind(stProblem));
-      searchAlgo.addNodeListener(expListener);
-
-      // TODO Display feedback while solving (e.g loading sign)
-      const solution = searchAlgo.findSolution(stProblem);
-      if (solution) animateSolution(board, solution, () => showAndUpdateExpansionCounter(expListener.getCount()));
-      else alert('No solution found');  // Technically should never happen
-
-    } catch(error) {
-      console.error(error);
-    } finally {
-      scrambleBtn?.removeAttribute('disabled');
-      solveBtn?.removeAttribute('disabled');
     }
   }
 }

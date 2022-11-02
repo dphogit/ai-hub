@@ -1,4 +1,5 @@
 import { Puzzle, PuzzleAction, SearchProblem } from "../core";
+import { List } from "immutable";
 
 /**
  * The sliding tiles' problem where the goal is to move the tiles around
@@ -132,5 +133,31 @@ export class SlidingTiles extends SearchProblem<Puzzle, PuzzleAction> {
       const manhattanDistance = deltaVert + deltaHor;
       return acc + manhattanDistance;
     }, 0);
+  }
+}
+
+export function createSolvedPuzzle(n: number): Puzzle {
+  const puzzle = [];
+  for (let i = 1; i < n * n; i++) {
+    puzzle.push(i);
+  }
+  puzzle.push(SlidingTiles.BLANK_TILE);
+  return List(puzzle);
+}
+
+export function shufflePuzzle(puzzle: Puzzle): Puzzle {
+  const shuffled = puzzle.toArray();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return List(shuffled);
+}
+
+export function generateRandomPuzzle(n: number) {
+  const solved = createSolvedPuzzle(n);
+  while (true) {
+    const shuffled = shufflePuzzle(solved);
+    if (SlidingTiles.isSolvable(shuffled)) return { solved, shuffled };
   }
 }
