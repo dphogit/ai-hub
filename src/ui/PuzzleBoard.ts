@@ -1,4 +1,4 @@
-import { Puzzle, SlidingTiles, generateRandomPuzzle, STNode, PuzzleAction } from "../search";
+import { Puzzle, SlidingTiles, generateRandomPuzzle } from "../search";
 import { DisplayStepsOptions } from "./types";
 
 function createTile(val: number) {

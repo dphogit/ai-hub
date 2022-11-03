@@ -10,6 +10,7 @@ import {
 } from "./search";
 import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
 
+// TODO Extract configuration to a modal
 // TODO Let user enter custom puzzle
 
 const boardElement = document.querySelector('.board') as HTMLDivElement;
@@ -116,7 +117,6 @@ function onClickSolve(board: PuzzleBoard) {
     const expListener = new ExpansionListener();
     searchAlgo.addNodeListener(expListener);
 
-    // TODO Display feedback while solving (e.g loading sign)
     const solution = searchAlgo.findSolution(stProblem);
     if (solution) {
       const solutionPath = solution.path();
