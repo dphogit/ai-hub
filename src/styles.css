@@ -11,6 +11,14 @@ body {
   padding: 0;
 }
 
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
 .layout {
   margin: 0 auto;
   width: 720px;
@@ -58,6 +66,33 @@ body {
   gap: 20px;
 }
 
+.controls__algorithm_options {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  margin: 16px 0;
+  width: 200px;
+}
+
+.controls__dropdown {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.controls__dropdown--algorithm {
+  margin-bottom: 12px;
+}
+
+.controls__dropdown > select {
+  font-size: 16px;
+  padding: 8px;
+  width: 100%;
+}
+
 .controls__button {
   font-size: 20px;
   padding: 8px 20px;
@@ -71,12 +106,4 @@ body {
 .stats__count {
   font-size: 20px;
   text-align: center;
-}
-
-.show {
-  display: block;
-}
-
-.hide {
-  display: none;
 }

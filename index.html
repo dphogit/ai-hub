@@ -14,6 +14,23 @@
                     <div class="board"></div>
                 </div>
                 <div class="controls">
+                    <div class="controls__algorithm_options">
+                        <div class="controls__dropdown controls__dropdown--algorithm">
+                            <label for="algorithm">Algorithm</label>
+                            <select id="algorithm">
+                                <option>A*</option>
+                                <option>Greedy</option>
+                                <option>Uniform Cost</option>
+                            </select>
+                        </div>
+                        <div class="controls__dropdown controls__dropdown--heuristic">
+                            <label for="heuristic">Heuristic</label>
+                            <select id="heuristic">
+                                <option>Manhattan Distance</option>
+                                <option>Misplaced Tiles</option>
+                            </select>
+                        </div>
+                    </div>
                     <button class="controls__button controls__button--scramble">Scramble</button>
                     <button class="controls__button controls__button--solve">Solve</button>
                 </div>
