@@ -61,8 +61,9 @@ export class PuzzleBoard {
   }
 
   displaySteps({path, onComplete, interval}: DisplayStepsOptions) {
+    const tempPath = [...path]; // We don't want to mutate original array
     const intervalId = setInterval(() => {
-      const node = path.shift();
+      const node = tempPath.shift();
       if (node) {
         this.update(node.state)
       } else {

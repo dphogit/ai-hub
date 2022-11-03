@@ -10,32 +10,45 @@ import {
 } from "./search";
 import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
 
+// TODO Let user enter custom puzzle
+
 const boardElement = document.querySelector('.board') as HTMLDivElement;
 const scrambleBtn = document.querySelector('.controls__button--scramble') as HTMLButtonElement;
 const solveBtn = document.querySelector('.controls__button--solve') as HTMLButtonElement;
-const expansionCounter = document.querySelector('.stats__count') as HTMLParagraphElement;
+const expansionCounter = document.querySelector('.stats__expansions') as HTMLParagraphElement;
+const stepsCounter = document.querySelector('.stats__steps') as HTMLParagraphElement;
 const algoSelectEl = document.querySelector('#algorithm') as HTMLSelectElement;
 const heuristicSelectEl = document.querySelector('#heuristic') as HTMLSelectElement;
 const heuristicControl = document.querySelector('.controls__dropdown--heuristic') as HTMLDivElement;
 
 const board = new PuzzleBoard(boardElement);
 
+function hideAndResetStepsCounter() {
+  updateStepsCounter(0);
+  hideElement(stepsCounter);
+}
+
+function showAndUpdateStepsCounter(length: number) {
+  updateStepsCounter(length);
+  showElement(stepsCounter);
+}
+
+function updateStepsCounter(length: number) {
+  stepsCounter.textContent = 'Steps: ' + length.toString();
+}
+
 function updateExpansionCounter(count: number) {
-  if (expansionCounter) expansionCounter.textContent = 'Expansions: ' + count.toString();
+  expansionCounter.textContent = 'Expansions: ' + count.toString();
 }
 
 function hideAndResetExpansionCounter() {
-  if (expansionCounter) {
-    updateExpansionCounter(0);
-    hideElement(expansionCounter)
-  }
+  updateExpansionCounter(0);
+  hideElement(expansionCounter)
 }
 
 function showAndUpdateExpansionCounter(count: number) {
-  if (expansionCounter) {
-    updateExpansionCounter(count);
-    showElement(expansionCounter);
-  }
+  updateExpansionCounter(count);
+  showElement(expansionCounter);
 }
 
 function getHeuristic(stProblem: SlidingTiles): HeuristicFunction<Puzzle> {
@@ -85,6 +98,7 @@ function onClickScramble(board: PuzzleBoard) {
   return () => {
     board.scramble();
     hideAndResetExpansionCounter();
+    hideAndResetStepsCounter();
   }
 }
 
@@ -105,10 +119,12 @@ function onClickSolve(board: PuzzleBoard) {
     // TODO Display feedback while solving (e.g loading sign)
     const solution = searchAlgo.findSolution(stProblem);
     if (solution) {
+      const solutionPath = solution.path();
       board.displaySteps({
-        path: solution.path(),
+        path: solutionPath,
         onComplete: () => {
           showAndUpdateExpansionCounter(expListener.getCount());
+          showAndUpdateStepsCounter(solutionPath.length);
           scrambleBtn?.removeAttribute('disabled');
           solveBtn?.removeAttribute('disabled');
         }
