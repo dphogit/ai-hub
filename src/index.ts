@@ -13,6 +13,9 @@ import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
 import { List } from "immutable";
 
 // TODO Have a default sliding tiles solution [1, 2, 3, 4, 5, 6, 7, 8, 0] rather than configuring each time
+// TODO Generic refactor and extracting out UI logic for reusability
+// TODO Navigation bar
+// TODO Testing frontend UI
 
 const boardElement = document.querySelector('.board') as HTMLDivElement;
 
@@ -34,6 +37,7 @@ const modalInput = document.querySelector('#custom-puzzle') as HTMLInputElement;
 const modalCloseBtn = document.querySelector('.modal__close') as HTMLButtonElement;
 const modalCancelBtn = document.querySelector('.modal__button--cancel') as HTMLButtonElement;
 const modalConfirmBtn = document.querySelector('.modal__button--confirm') as HTMLButtonElement;
+const modalError = document.querySelector('.modal__error') as HTMLParagraphElement;
 
 const board = new PuzzleBoard(boardElement);
 
@@ -99,12 +103,18 @@ function closeModal() {
   modalEl.classList.remove('modal--in');
   modalEl.classList.add('modal--out');
   overlayDiv.classList.remove('overlay--show');
+  updateModalError('');
+  hideElement(modalError);
 }
 
 function openModal() {
   modalEl.classList.remove('modal--out');
   modalEl.classList.add('modal--in');
   overlayDiv.classList.add('overlay--show');
+}
+
+function updateModalError(message: string) {
+  modalError.textContent = message;
 }
 
 function validatePuzzleInput(value: string): Puzzle | null {
@@ -124,18 +134,20 @@ function validatePuzzleInput(value: string): Puzzle | null {
   return puzzle;
 }
 
-function onClickModalConfirm() {
+function onModalConfirm() {
   const value = modalInput.value.trim();
   if (value.length === 0) return;
 
   const puzzle = validatePuzzleInput(value);
   if (puzzle === null) {
-    console.error('Invalid puzzle input');
+    updateModalError('Invalid puzzle input');
+    showElement(modalError);
     return;
   }
 
   if (!SlidingTiles.isSolvable(puzzle)) {
-    console.error('Puzzle is not solvable');
+    updateModalError('Puzzle is not solvable');
+    showElement(modalError);
     return;
   }
 
@@ -146,7 +158,7 @@ function onClickModalConfirm() {
 
 function onKeypressModalInput(event: KeyboardEvent) {
   if (event.key === 'Enter') {
-    onClickModalConfirm();
+    onModalConfirm();
   }
 }
 
@@ -232,7 +244,7 @@ customBtn.addEventListener('click', openModal);
 modalInput.addEventListener('keypress', onKeypressModalInput);
 modalCancelBtn.addEventListener('click', closeModal);
 modalCloseBtn.addEventListener('click', closeModal);
-modalConfirmBtn.addEventListener('click', onClickModalConfirm);
+modalConfirmBtn.addEventListener('click', onModalConfirm);
 
 algoSelectEl.addEventListener('change', onAlgoChange);
 

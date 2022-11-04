@@ -65,6 +65,12 @@ body {
   margin-bottom: 24px;
 }
 
+.modal__error {
+  color: red;
+  font-size: 12px;
+  margin-top: 0;
+}
+
 .modal__close {
   background: none;
   font-size: 18px;
@@ -90,7 +96,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .modal__input_group > label {
