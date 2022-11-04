@@ -9,6 +9,8 @@
 h1 {
   text-align: center;
   font-weight: 500;
+  font-size: 54px;
+  margin-bottom: 60px;
 }
 
 body {
@@ -135,12 +137,6 @@ body {
   flex: 1;
 }
 
-.board__wrapper {
-  display: flex;
-  justify-content: center;
-  margin: 24px 0;
-}
-
 .board {
   display: grid;
   margin: 0 auto;
@@ -171,7 +167,6 @@ body {
 
 .controls {
   flex: 1;
-  margin-top: 84px;
 }
 
 .controls__dropdown--algorithm {
@@ -204,6 +199,7 @@ body {
 
 .stats {
   font-size: 20px;
+  margin-top: 40px;
 }
 
 .stats__heading {
