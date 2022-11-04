@@ -16,22 +16,25 @@ import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
 const boardElement = document.querySelector('.board') as HTMLDivElement;
 const scrambleBtn = document.querySelector('.controls__button--scramble') as HTMLButtonElement;
 const solveBtn = document.querySelector('.controls__button--solve') as HTMLButtonElement;
-const expansionCounter = document.querySelector('.stats__expansions') as HTMLParagraphElement;
-const stepsCounter = document.querySelector('.stats__steps') as HTMLParagraphElement;
 const algoSelectEl = document.querySelector('#algorithm') as HTMLSelectElement;
 const heuristicSelectEl = document.querySelector('#heuristic') as HTMLSelectElement;
 const heuristicControl = document.querySelector('.controls__dropdown--heuristic') as HTMLDivElement;
+const statsDiv = document.querySelector('.stats') as HTMLDivElement;
+const stepsCounter = document.querySelector('.stats__steps') as HTMLParagraphElement;
+const expansionCounter = document.querySelector('.stats__expansions') as HTMLParagraphElement;
 
 const board = new PuzzleBoard(boardElement);
 
-function hideAndResetStepsCounter() {
-  updateStepsCounter(0);
-  hideElement(stepsCounter);
+function showStats(steps: number, expansions: number) {
+  updateStepsCounter(steps);
+  updateExpansionCounter(expansions);
+  showElement(statsDiv);
 }
 
-function showAndUpdateStepsCounter(length: number) {
-  updateStepsCounter(length);
-  showElement(stepsCounter);
+function hideStats() {
+  updateExpansionCounter(0);
+  updateStepsCounter(0);
+  hideElement(statsDiv);
 }
 
 function updateStepsCounter(length: number) {
@@ -40,16 +43,6 @@ function updateStepsCounter(length: number) {
 
 function updateExpansionCounter(count: number) {
   expansionCounter.textContent = 'Expansions: ' + count.toString();
-}
-
-function hideAndResetExpansionCounter() {
-  updateExpansionCounter(0);
-  hideElement(expansionCounter)
-}
-
-function showAndUpdateExpansionCounter(count: number) {
-  updateExpansionCounter(count);
-  showElement(expansionCounter);
 }
 
 function getHeuristic(stProblem: SlidingTiles): HeuristicFunction<Puzzle> {
@@ -89,6 +82,7 @@ function constructProblemSearch(stProblem: SlidingTiles): SearchAlgorithm<Puzzle
 function onAlgoChange() {
   const selectedAlgorithm = algoSelectEl.options[algoSelectEl.selectedIndex].value;
   if (selectedAlgorithm === 'Uniform Cost') {
+    console.log('Selected algorithm: ' + selectedAlgorithm);
     hideElement(heuristicControl);
   } else {
     showElement(heuristicControl);
@@ -98,8 +92,7 @@ function onAlgoChange() {
 function onClickScramble(board: PuzzleBoard) {
   return () => {
     board.scramble();
-    hideAndResetExpansionCounter();
-    hideAndResetStepsCounter();
+    hideStats();
   }
 }
 
@@ -123,8 +116,7 @@ function onClickSolve(board: PuzzleBoard) {
       board.displaySteps({
         path: solutionPath,
         onComplete: () => {
-          showAndUpdateExpansionCounter(expListener.getCount());
-          showAndUpdateStepsCounter(solutionPath.length);
+          showStats(solutionPath.length, expListener.getCount());
           scrambleBtn?.removeAttribute('disabled');
           solveBtn?.removeAttribute('disabled');
         }

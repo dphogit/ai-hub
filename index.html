@@ -10,12 +10,14 @@
     <body>
         <main>
             <div class="layout">
-                <h1>8 Puzzle AI Solver</h1>
-                <div class="board__wrapper">
-                    <div class="board"></div>
-                </div>
-                <div class="controls">
-                    <div class="controls__algorithm_options">
+                <div class="layout__flex">
+                    <div class="layout__board">
+                        <h1>8 Puzzle AI Solver</h1>
+                        <div class="board__wrapper">
+                            <div class="board"></div>
+                        </div>
+                    </div>
+                    <div class="controls">
                         <div class="controls__dropdown controls__dropdown--algorithm">
                             <label for="algorithm">Algorithm</label>
                             <select id="algorithm">
@@ -31,13 +33,16 @@
                                 <option>Misplaced Tiles</option>
                             </select>
                         </div>
+                        <div class="controls__buttons">
+                            <button class="controls__button controls__button--scramble">Scramble</button>
+                            <button class="controls__button controls__button--solve">Solve</button>
+                        </div>
                     </div>
-                    <button class="controls__button controls__button--scramble">Scramble</button>
-                    <button class="controls__button controls__button--solve">Solve</button>
                 </div>
-                <div class="stats">
-                    <p class="stats__steps hide"></p>
-                    <p class="stats__expansions hide"></p>
+                <div class="stats hide">
+                    <h2 class="stats__heading">Stats</h2>
+                    <p class="stats__steps">0</p>
+                    <p class="stats__expansions">0</p>
                 </div>
             </div>
             <script type="module" src="src/index.ts"></script>

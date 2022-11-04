@@ -27,6 +27,16 @@ body {
 .layout {
   margin: 0 auto;
   width: 720px;
+  align-items: center;
+}
+
+.layout__flex {
+  display: flex;
+  gap: 48px;
+}
+
+.layout__board {
+  flex: 1;
 }
 
 .board__wrapper {
@@ -64,44 +74,35 @@ body {
 }
 
 .controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-
-.controls__algorithm_options {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  font-size: 16px;
-  margin: 16px 0;
-  width: 200px;
-}
-
-.controls__dropdown {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
+  flex: 1;
+  margin-top: 84px;
 }
 
 .controls__dropdown--algorithm {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.controls__dropdown--heuristic {
+  margin-bottom: 36px;
 }
 
 .controls__dropdown > select {
   font-size: 16px;
   padding: 8px;
   width: 100%;
+  margin-top: 4px;
+}
+
+.controls__buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
 }
 
 .controls__button {
-  font-size: 20px;
-  padding: 8px 20px;
-  width: 150px;
+  font-size: 16px;
+  width: 100px;
+  padding: 8px 0;
 }
 
 .controls__button:not(:disabled) {
@@ -110,5 +111,8 @@ body {
 
 .stats {
   font-size: 20px;
-  text-align: center;
+}
+
+.stats__heading {
+  font-weight: 500;
 }
