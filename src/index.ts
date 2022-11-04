@@ -10,20 +10,29 @@ import {
 } from "./search";
 import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
 
-// TODO Extract configuration to a modal
-// TODO Let user enter custom puzzle
-
 const boardElement = document.querySelector('.board') as HTMLDivElement;
+
+const algoSelectEl = document.querySelector('#algorithm') as HTMLSelectElement;
+const heuristicDiv = document.querySelector('.controls__dropdown--heuristic') as HTMLDivElement;
+const heuristicSelectEl = document.querySelector('#heuristic') as HTMLSelectElement;
+
+const customBtn = document.querySelector('.controls__button--custom') as HTMLButtonElement;
 const scrambleBtn = document.querySelector('.controls__button--scramble') as HTMLButtonElement;
 const solveBtn = document.querySelector('.controls__button--solve') as HTMLButtonElement;
-const algoSelectEl = document.querySelector('#algorithm') as HTMLSelectElement;
-const heuristicSelectEl = document.querySelector('#heuristic') as HTMLSelectElement;
-const heuristicControl = document.querySelector('.controls__dropdown--heuristic') as HTMLDivElement;
+
 const statsDiv = document.querySelector('.stats') as HTMLDivElement;
-const stepsCounter = document.querySelector('.stats__steps') as HTMLParagraphElement;
-const expansionCounter = document.querySelector('.stats__expansions') as HTMLParagraphElement;
+const stepsCounterEl = document.querySelector('.stats__steps') as HTMLParagraphElement;
+const expansionCounterEl = document.querySelector('.stats__expansions') as HTMLParagraphElement;
 
 const board = new PuzzleBoard(boardElement);
+
+function updateStepsCounter(length: number) {
+  stepsCounterEl.textContent = 'Steps: ' + length.toString();
+}
+
+function updateExpansionCounter(count: number) {
+  expansionCounterEl.textContent = 'Expansions: ' + count.toString();
+}
 
 function showStats(steps: number, expansions: number) {
   updateStepsCounter(steps);
@@ -37,12 +46,42 @@ function hideStats() {
   hideElement(statsDiv);
 }
 
-function updateStepsCounter(length: number) {
-  stepsCounter.textContent = 'Steps: ' + length.toString();
+function disableOptionDropdowns() {
+  const dropDownsDiv = document.querySelectorAll('.controls__dropdown');
+  dropDownsDiv.forEach((el) => {
+    el.getElementsByTagName('select')[0].setAttribute('disabled', 'true');
+  })
 }
 
-function updateExpansionCounter(count: number) {
-  expansionCounter.textContent = 'Expansions: ' + count.toString();
+function enableOptionDropdowns() {
+  const dropDowns = document.querySelectorAll('.controls__dropdown');
+  dropDowns.forEach((el) => {
+    el.getElementsByTagName('select')[0].removeAttribute('disabled');
+  })
+}
+
+function disableOptionButtons() {
+  const buttons = document.querySelectorAll('.controls__button');
+  buttons.forEach((el) => {
+    el.setAttribute('disabled', 'true');
+  })
+}
+
+function enableOptionButtons() {
+  const buttons = document.querySelectorAll('.controls__button');
+  buttons.forEach((el) => {
+    el.removeAttribute('disabled');
+  })
+}
+
+function disableOptions() {
+  disableOptionDropdowns();
+  disableOptionButtons()
+}
+
+function enableOptions() {
+  enableOptionDropdowns();
+  enableOptionButtons();
 }
 
 function getHeuristic(stProblem: SlidingTiles): HeuristicFunction<Puzzle> {
@@ -83,10 +122,14 @@ function onAlgoChange() {
   const selectedAlgorithm = algoSelectEl.options[algoSelectEl.selectedIndex].value;
   if (selectedAlgorithm === 'Uniform Cost') {
     console.log('Selected algorithm: ' + selectedAlgorithm);
-    hideElement(heuristicControl);
+    hideElement(heuristicDiv);
   } else {
-    showElement(heuristicControl);
+    showElement(heuristicDiv);
   }
+}
+
+function onClickCustom() {
+  // TODO Implement me
 }
 
 function onClickScramble(board: PuzzleBoard) {
@@ -98,8 +141,7 @@ function onClickScramble(board: PuzzleBoard) {
 
 function onClickSolve(board: PuzzleBoard) {
   return () => {
-    scrambleBtn?.setAttribute('disabled', 'true');
-    solveBtn?.setAttribute('disabled', 'true');
+    disableOptions();
 
     const stProblem = new SlidingTiles({
       initialState: board.puzzle,
@@ -117,8 +159,7 @@ function onClickSolve(board: PuzzleBoard) {
         path: solutionPath,
         onComplete: () => {
           showStats(solutionPath.length, expListener.getCount());
-          scrambleBtn?.removeAttribute('disabled');
-          solveBtn?.removeAttribute('disabled');
+          enableOptions();
         }
       });
     }
