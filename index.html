@@ -9,6 +9,21 @@
     </head>
     <body>
         <main>
+            <div class="overlay"></div>
+            <div class="modal modal--out">
+                <header class="modal__header">
+                    <h3 class="modal__title">Custom puzzle</h3>
+                    <button class="modal__close">X</button>
+                </header>
+                <div class="modal__input_group">
+                    <label for="custom-puzzle">Enter top down to bottom right e.g. 123456780</label>
+                    <input id="custom-puzzle" />
+                </div>
+                <footer class="modal__buttons">
+                    <button class="modal__button modal__button--cancel">Cancel</button>
+                    <button class="modal__button modal__button--confirm">Confirm</button>
+                </footer>
+            </div>
             <div class="layout">
                 <div class="layout__flex">
                     <div class="layout__board">

@@ -2,13 +2,17 @@ import { hideElement, PuzzleBoard, showElement } from "./ui";
 import {
   AStarSearch,
   ExpansionListener,
-  GreedySearch, HeuristicFunction,
+  GreedySearch,
+  HeuristicFunction,
   Puzzle,
   PuzzleAction,
   SlidingTiles,
   UniformCostSearch
 } from "./search";
 import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
+import { List } from "immutable";
+
+// TODO Have a default sliding tiles solution [1, 2, 3, 4, 5, 6, 7, 8, 0] rather than configuring each time
 
 const boardElement = document.querySelector('.board') as HTMLDivElement;
 
@@ -23,6 +27,13 @@ const solveBtn = document.querySelector('.controls__button--solve') as HTMLButto
 const statsDiv = document.querySelector('.stats') as HTMLDivElement;
 const stepsCounterEl = document.querySelector('.stats__steps') as HTMLParagraphElement;
 const expansionCounterEl = document.querySelector('.stats__expansions') as HTMLParagraphElement;
+
+const overlayDiv = document.querySelector('.overlay') as HTMLDivElement;
+const modalEl = document.querySelector('.modal') as HTMLDivElement;
+const modalInput = document.querySelector('#custom-puzzle') as HTMLInputElement;
+const modalCloseBtn = document.querySelector('.modal__close') as HTMLButtonElement;
+const modalCancelBtn = document.querySelector('.modal__button--cancel') as HTMLButtonElement;
+const modalConfirmBtn = document.querySelector('.modal__button--confirm') as HTMLButtonElement;
 
 const board = new PuzzleBoard(boardElement);
 
@@ -84,6 +95,61 @@ function enableOptions() {
   enableOptionButtons();
 }
 
+function closeModal() {
+  modalEl.classList.remove('modal--in');
+  modalEl.classList.add('modal--out');
+  overlayDiv.classList.remove('overlay--show');
+}
+
+function openModal() {
+  modalEl.classList.remove('modal--out');
+  modalEl.classList.add('modal--in');
+  overlayDiv.classList.add('overlay--show');
+}
+
+function validatePuzzleInput(value: string): Puzzle | null {
+  const solution = ['1', '2', '3', '4', '5', '6', '7', '8', '0'];
+  const pool = new Set(solution);
+  const split = value.split('');
+  const puzzle = List(split.map((s) => parseInt(s)));
+
+  if (puzzle.size !== solution.length) return null;
+
+  puzzle.forEach((i) => {
+    pool.delete(i.toString());
+  })
+
+  if (pool.size !== 0) return null;
+
+  return puzzle;
+}
+
+function onClickModalConfirm() {
+  const value = modalInput.value.trim();
+  if (value.length === 0) return;
+
+  const puzzle = validatePuzzleInput(value);
+  if (puzzle === null) {
+    console.error('Invalid puzzle input');
+    return;
+  }
+
+  if (!SlidingTiles.isSolvable(puzzle)) {
+    console.error('Puzzle is not solvable');
+    return;
+  }
+
+  board.update(puzzle);
+  modalInput.value = '';
+  closeModal();
+}
+
+function onKeypressModalInput(event: KeyboardEvent) {
+  if (event.key === 'Enter') {
+    onClickModalConfirm();
+  }
+}
+
 function getHeuristic(stProblem: SlidingTiles): HeuristicFunction<Puzzle> {
   const selectedHeuristic = heuristicSelectEl.options[heuristicSelectEl.selectedIndex].value;
   switch(selectedHeuristic) {
@@ -121,15 +187,10 @@ function constructProblemSearch(stProblem: SlidingTiles): SearchAlgorithm<Puzzle
 function onAlgoChange() {
   const selectedAlgorithm = algoSelectEl.options[algoSelectEl.selectedIndex].value;
   if (selectedAlgorithm === 'Uniform Cost') {
-    console.log('Selected algorithm: ' + selectedAlgorithm);
     hideElement(heuristicDiv);
   } else {
     showElement(heuristicDiv);
   }
-}
-
-function onClickCustom() {
-  // TODO Implement me
 }
 
 function onClickScramble(board: PuzzleBoard) {
@@ -166,6 +227,14 @@ function onClickSolve(board: PuzzleBoard) {
   }
 }
 
+overlayDiv.addEventListener('click', closeModal);
+customBtn.addEventListener('click', openModal);
+modalInput.addEventListener('keypress', onKeypressModalInput);
+modalCancelBtn.addEventListener('click', closeModal);
+modalCloseBtn.addEventListener('click', closeModal);
+modalConfirmBtn.addEventListener('click', onClickModalConfirm);
+
+algoSelectEl.addEventListener('change', onAlgoChange);
+
 scrambleBtn.addEventListener('click', onClickScramble(board));
 solveBtn.addEventListener('click', onClickSolve(board));
-algoSelectEl.addEventListener('change', onAlgoChange);
