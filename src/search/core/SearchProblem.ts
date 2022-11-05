@@ -1,20 +1,21 @@
-interface SearchProblemConfig<S> {
-  initialState: S;
-  goalState?: S;
-}
+import { SearchProblemConfig } from "../types";
 
 /**
  * Follows a formal definition of a problem to be solved via search algorithms.
  * Is a basis for all types of search problems which need to be overridden with
- * specific contextual details regarding the  domain. State and actions are defined
+ * specific contextual details regarding the problem domain. State and actions are defined
  * through the generic parameters of S and A respectively.
- *
- * Specify a goalState if there is a specific goal state to be checked.
  */
 export abstract class SearchProblem<S, A> {
   public initialState: S;
   public goalState: S | undefined;
 
+  /**
+   * Create a new search problem.
+   * @param config  Object consisting of the initial state and an optional goal state
+   *                if there is a specific goal state to be checked.
+   * @protected
+   */
   protected constructor(config: SearchProblemConfig<S>) {
     this.initialState = config.initialState;
     this.goalState = config.goalState;

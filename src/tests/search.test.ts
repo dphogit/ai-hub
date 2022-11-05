@@ -1,5 +1,12 @@
 import { List } from "immutable";
-import { SlidingTiles, aStarSearch, greedySearch, uniformCostSearch } from "../search";
+import {
+  SlidingTiles,
+  AStarSearch,
+  GreedySearch,
+  UniformCostSearch,
+  BreadthFirstSearch,
+  DepthFirstSearch, IDAStarSearch,
+} from "../search";
 
 // Unit tests for all problems and their implementations
 describe('problems', () =>  {
@@ -75,72 +82,122 @@ describe('algorithms', () => {
   // A* uses best first search best first search algorithm implicitly (f = g + h)
   describe('A*', () => {
     test('puzzle 1', () => {
-      expect(aStarSearch(eightPuzzle1, eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1))?.pathCost).toBe(2);
-      expect(aStarSearch(eightPuzzle1, eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1))?.pathCost).toBe(2);
+      expect(new AStarSearch(eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1)).findSolution(eightPuzzle1)?.pathCost).toBe(2);
+      expect(new AStarSearch(eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1)).findSolution(eightPuzzle1)?.pathCost).toBe(2);
     })
     test('puzzle 2', () => {
-      expect(aStarSearch(eightPuzzle2, eightPuzzle2.misplacedTilesHeuristic.bind(eightPuzzle2))?.pathCost).toBe(8);
-      expect(aStarSearch(eightPuzzle2, eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2))?.pathCost).toBe(8);
+      expect(new AStarSearch(eightPuzzle2.misplacedTilesHeuristic.bind(eightPuzzle2)).findSolution(eightPuzzle2)?.pathCost).toBe(8);
+      expect(new AStarSearch(eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2)).findSolution(eightPuzzle2)?.pathCost).toBe(8);
     })
     test('puzzle 3', () => {
-      expect(aStarSearch(eightPuzzle3, eightPuzzle3.misplacedTilesHeuristic.bind(eightPuzzle3))?.pathCost).toBe(16);
-      expect(aStarSearch(eightPuzzle3, eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3))?.pathCost).toBe(16);
+      expect(new AStarSearch(eightPuzzle3.misplacedTilesHeuristic.bind(eightPuzzle3)).findSolution(eightPuzzle3)?.pathCost).toBe(16);
+      expect(new AStarSearch(eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3)).findSolution(eightPuzzle3)?.pathCost).toBe(16);
     })
     test('puzzle 4', () => {
-      expect(aStarSearch(eightPuzzle4, eightPuzzle4.misplacedTilesHeuristic.bind(eightPuzzle4))?.pathCost).toBe(22);
-      expect(aStarSearch(eightPuzzle4, eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4))?.pathCost).toBe(22);
+      expect(new AStarSearch(eightPuzzle4.misplacedTilesHeuristic.bind(eightPuzzle4)).findSolution(eightPuzzle4)?.pathCost).toBe(22);
+      expect(new AStarSearch(eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4)).findSolution(eightPuzzle4)?.pathCost).toBe(22);
     })
     test('puzzle 5', () => {
-      expect(aStarSearch(eightPuzzle5, eightPuzzle5.misplacedTilesHeuristic.bind(eightPuzzle5))?.pathCost).toBe(24);
-      expect(aStarSearch(eightPuzzle5, eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5))?.pathCost).toBe(24);
+      expect(new AStarSearch(eightPuzzle5.misplacedTilesHeuristic.bind(eightPuzzle5)).findSolution(eightPuzzle5)?.pathCost).toBe(24);
+      expect(new AStarSearch(eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5)).findSolution(eightPuzzle5)?.pathCost).toBe(24);
     })
   })
 
   // Greedy uses best first search algorithm implicitly (f = h)
   describe('greedy', () => {
     test('puzzle 1', () => {
-      expect(greedySearch(eightPuzzle1, eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
-      expect(greedySearch(eightPuzzle1, eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle1.misplacedTilesHeuristic.bind(eightPuzzle1)).findSolution(eightPuzzle1)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1)).findSolution(eightPuzzle1)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
     })
     test('puzzle 2', () => {
-      expect(greedySearch(eightPuzzle2, eightPuzzle2.misplacedTilesHeuristic.bind(eightPuzzle2))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
-      expect(greedySearch(eightPuzzle2, eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle2.misplacedTilesHeuristic.bind(eightPuzzle2)).findSolution(eightPuzzle2)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2)).findSolution(eightPuzzle2)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
     })
     test('puzzle 3', () => {
-      expect(greedySearch(eightPuzzle3, eightPuzzle3.misplacedTilesHeuristic.bind(eightPuzzle3))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
-      expect(greedySearch(eightPuzzle3, eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle3.misplacedTilesHeuristic.bind(eightPuzzle3)).findSolution(eightPuzzle3)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3)).findSolution(eightPuzzle3)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
     })
     test('puzzle 4', () => {
-      expect(greedySearch(eightPuzzle4, eightPuzzle4.misplacedTilesHeuristic.bind(eightPuzzle4))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
-      expect(greedySearch(eightPuzzle4, eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle4.misplacedTilesHeuristic.bind(eightPuzzle4)).findSolution(eightPuzzle4)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4)).findSolution(eightPuzzle4)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
     })
     test('puzzle 5', () => {
-      expect(greedySearch(eightPuzzle5, eightPuzzle5.misplacedTilesHeuristic.bind(eightPuzzle5))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
-      expect(greedySearch(eightPuzzle5, eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5))?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle5.misplacedTilesHeuristic.bind(eightPuzzle5)).findSolution(eightPuzzle5)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+      expect(new GreedySearch(eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5)).findSolution(eightPuzzle5)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
     })
   })
 
   // Uniform cost search uses best first search algorithm implicitly (f = g)
   describe('uniform cost', () => {
     test('puzzle 1', () => {
-      expect(uniformCostSearch(eightPuzzle1)?.pathCost).toBe(2);
-      expect(uniformCostSearch(eightPuzzle1)?.pathCost).toBe(2);
+      expect(new UniformCostSearch().findSolution(eightPuzzle1)?.pathCost).toBe(2);
     })
     test('puzzle 2', () => {
-      expect(uniformCostSearch(eightPuzzle2)?.pathCost).toBe(8);
-      expect(uniformCostSearch(eightPuzzle2)?.pathCost).toBe(8);
+      expect(new UniformCostSearch().findSolution(eightPuzzle2)?.pathCost).toBe(8);
     })
     test('puzzle 3', () => {
-      expect(uniformCostSearch(eightPuzzle3)?.pathCost).toBe(16);
-      expect(uniformCostSearch(eightPuzzle3)?.pathCost).toBe(16);
+      expect(new UniformCostSearch().findSolution(eightPuzzle3)?.pathCost).toBe(16);
     })
     test('puzzle 4', () => {
-      expect(uniformCostSearch(eightPuzzle4)?.pathCost).toBe(22);
-      expect(uniformCostSearch(eightPuzzle4)?.pathCost).toBe(22);
+      expect(new UniformCostSearch().findSolution(eightPuzzle4)?.pathCost).toBe(22);
     })
     test('puzzle 5', () => {
-      expect(uniformCostSearch(eightPuzzle5)?.pathCost).toBe(24);
-      expect(uniformCostSearch(eightPuzzle5)?.pathCost).toBe(24);
+      expect(new UniformCostSearch().findSolution(eightPuzzle5)?.pathCost).toBe(24);
+    })
+  })
+
+  describe('breadth first', () => {
+    // Each step costs 1 in the sliding tiles puzzle - we can test the optimal path cost
+    test('puzzle 1', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle1)?.pathCost).toBe(2);
+    })
+    test('puzzle 2', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle2)?.pathCost).toBe(8);
+    })
+    test('puzzle 3', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle3)?.pathCost).toBe(16);
+    })
+    test('puzzle 4', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle4)?.pathCost).toBe(22);
+    })
+    test('puzzle 5', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle5)?.pathCost).toBe(24);
+    })
+  })
+
+  describe('depth first', () => {
+    test('puzzle 1', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle1)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 2', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle2)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 3', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle3)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 4', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle4)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 5', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle5)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+  })
+
+  describe('IDA*', () => {
+    test('puzzle 1', () => {
+      expect(new IDAStarSearch(eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1)).findSolution(eightPuzzle1)?.pathCost).toBe(2);
+    })
+    test('puzzle 2', () => {
+      expect(new IDAStarSearch(eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2)).findSolution(eightPuzzle2)?.pathCost).toBe(8);
+    })
+    test('puzzle 3', () => {
+      expect(new IDAStarSearch(eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3)).findSolution(eightPuzzle3)?.pathCost).toBe(16);
+    })
+    test('puzzle 4', () => {
+      expect(new IDAStarSearch(eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4)).findSolution(eightPuzzle4)?.pathCost).toBe(22);
+    })
+    test('puzzle 5', () => {
+      expect(new IDAStarSearch(eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5)).findSolution(eightPuzzle5)?.pathCost).toBe(24);
     })
   })
 })

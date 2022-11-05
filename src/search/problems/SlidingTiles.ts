@@ -1,8 +1,5 @@
-import { SearchProblem } from "../core";
+import { Puzzle, PuzzleAction, SearchProblem } from "../core";
 import { List } from "immutable";
-
-type STState = List<number>;
-type STAction = "U" | "L" | "R" | "D";
 
 /**
  * The sliding tiles' problem where the goal is to move the tiles around
@@ -16,19 +13,19 @@ type STAction = "U" | "L" | "R" | "D";
  * with the tile in that direction.
  *
  */
-export class SlidingTiles extends SearchProblem<STState, STAction> {
+export class SlidingTiles extends SearchProblem<Puzzle, PuzzleAction> {
 
   static BLANK_TILE = 0;
 
   n: number;
 
   // Only one specific goal state
-  constructor(config: { initialState: STState, goalState: STState }) {
+  constructor(config: { initialState: Puzzle, goalState: Puzzle }) {
     super(config);
     this.n = Math.sqrt(config.initialState.size);
   }
 
-  private static swapTiles(state: STState, i1: number, i2: number): STState {
+  private static swapTiles(state: Puzzle, i1: number, i2: number): Puzzle {
     return state.withMutations(s => {
       const t1 = s.get(i1);
       const t2 = s.get(i2);
@@ -39,25 +36,25 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
   }
 
   // Calculate the index delta to move the empty tile within in the array
-  private calcDelta(action: STAction): number {
+  private calcDelta(action: PuzzleAction): number {
     return {'U': -this.n, 'D': this.n, 'L': -1, 'R': 1}[action];
   }
 
   // Cost of moving a tile is always 1
-  getActionCost(state1: STState, action: STAction, state2: STState): number {
+  getActionCost(state1: Puzzle, action: PuzzleAction, state2: Puzzle): number {
     return 1;
   }
 
   // Swap the empty tile with the tile in the given direction
-  getActionResult(state: STState, action: STAction): STState {
+  getActionResult(state: Puzzle, action: PuzzleAction): Puzzle {
     const blankIndex = state.indexOf(SlidingTiles.BLANK_TILE);
     const neighbourIndex = blankIndex + this.calcDelta(action);
     return SlidingTiles.swapTiles(state, blankIndex, neighbourIndex)
   }
 
   // Only return actions that will not move the empty tile out of bounds
-  getActions(state: STState): Set<STAction> {
-    const possibleActions = new Set<STAction>(['U', 'D', 'L', 'R']);
+  getActions(state: Puzzle): Set<PuzzleAction> {
+    const possibleActions = new Set<PuzzleAction>(['U', 'D', 'L', 'R']);
     const emptyTileIndex = state.indexOf(0);
 
     const isOnTopRow = emptyTileIndex < this.n;
@@ -82,7 +79,7 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
   }
 
   // A state is solvable if the number of inversions is not odd (i.e. is even)
-  static isSolvable(state: STState): boolean {
+  static isSolvable(state: Puzzle): boolean {
     let inversions = 0;
 
     for (let i = 0; i < state.size; i++) {
@@ -102,12 +99,12 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
     return inversions % 2 === 0;
   }
 
-  isGoal(state: STState): boolean {
+  isGoal(state: Puzzle): boolean {
     return this.goalState !== undefined && this.goalState.every((val, i) => val === state.get(i));
   }
 
   // Counts the number of tiles that are not in their correct position (excl. blank tile)
-  misplacedTilesHeuristic(state: STState): number {
+  misplacedTilesHeuristic(state: Puzzle): number {
     return state.reduce((acc, val, i) => {
       if (!this.goalState) {
         throw new Error('Goal state is not defined - for this problem a goal state is required');
@@ -120,7 +117,7 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
   }
 
   // Counts the sum of the manhattan distances of each tile from its correct position
-  manhattanDistanceHeuristic(state: STState): number {
+  manhattanDistanceHeuristic(state: Puzzle): number {
     return state.reduce((acc, val, i) => {
       if (!this.goalState) {
         throw new Error('Goal state is not defined - for this problem a goal state is required');
@@ -136,5 +133,31 @@ export class SlidingTiles extends SearchProblem<STState, STAction> {
       const manhattanDistance = deltaVert + deltaHor;
       return acc + manhattanDistance;
     }, 0);
+  }
+}
+
+export function createSolvedPuzzle(n: number): Puzzle {
+  const puzzle = [];
+  for (let i = 1; i < n * n; i++) {
+    puzzle.push(i);
+  }
+  puzzle.push(SlidingTiles.BLANK_TILE);
+  return List(puzzle);
+}
+
+export function shufflePuzzle(puzzle: Puzzle): Puzzle {
+  const shuffled = puzzle.toArray();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return List(shuffled);
+}
+
+export function generateRandomPuzzle(n: number) {
+  const solved = createSolvedPuzzle(n);
+  while (true) {
+    const shuffled = shufflePuzzle(solved);
+    if (SlidingTiles.isSolvable(shuffled)) return { solved, shuffled };
   }
 }
