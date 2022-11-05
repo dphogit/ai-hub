@@ -4,7 +4,8 @@ import {
   AStarSearch,
   GreedySearch,
   UniformCostSearch,
-  BreadthFirstSearch, DepthFirstSearch,
+  BreadthFirstSearch,
+  DepthFirstSearch,
 } from "../search";
 
 // Unit tests for all problems and their implementations

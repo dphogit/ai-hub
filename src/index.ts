@@ -1,6 +1,6 @@
 import { hideElement, PuzzleBoard, showElement } from "./ui";
 import {
-  AStarSearch,
+  AStarSearch, BreadthFirstSearch, DepthFirstSearch,
   ExpansionListener,
   GreedySearch,
   HeuristicFunction,
@@ -176,8 +176,11 @@ function constructProblemSearch(stProblem: SlidingTiles): SearchAlgorithm<Puzzle
   const selectedAlgorithm = algoSelectEl.options[algoSelectEl.selectedIndex].value;
 
   // Check for uninformed search algorithms before getting heuristic
-  if (selectedAlgorithm === 'Uniform Cost') {
-    return new UniformCostSearch<Puzzle, PuzzleAction>();
+  switch (selectedAlgorithm) {
+    case 'Uniform Cost':
+      return new UniformCostSearch<Puzzle, PuzzleAction>();
+    case 'BFS':
+      return new BreadthFirstSearch<Puzzle, PuzzleAction>();
   }
 
   // Informed search algorithms
@@ -195,10 +198,13 @@ function constructProblemSearch(stProblem: SlidingTiles): SearchAlgorithm<Puzzle
 
 function onAlgoChange() {
   const selectedAlgorithm = algoSelectEl.options[algoSelectEl.selectedIndex].value;
-  if (selectedAlgorithm === 'Uniform Cost') {
-    hideElement(heuristicDiv);
-  } else {
-    showElement(heuristicDiv);
+  switch (selectedAlgorithm) {
+    case 'Uniform Cost':
+    case 'BFS':
+      hideElement(heuristicDiv);
+      break;
+    default:
+      showElement(heuristicDiv);
   }
 }
 
@@ -228,7 +234,7 @@ function onClickSolve(board: PuzzleBoard) {
       board.displaySteps({
         path: solutionPath,
         onComplete: () => {
-          showStats(solutionPath.length, expListener.getCount());
+          showStats(solutionPath.length - 1, expListener.getCount());
           enableOptions();
         }
       });
