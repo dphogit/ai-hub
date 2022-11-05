@@ -3,7 +3,8 @@ import {
   SlidingTiles,
   AStarSearch,
   GreedySearch,
-  UniformCostSearch
+  UniformCostSearch,
+  BreadthFirstSearch, DepthFirstSearch,
 } from "../search";
 
 // Unit tests for all problems and their implementations
@@ -77,8 +78,6 @@ describe('algorithms', () => {
   const eightPuzzle4 = new SlidingTiles({initialState: List([3, 1, 6, 5, 8, 7, 0, 2, 4]), goalState: List([1, 2, 3, 4, 5, 6, 7, 8, 0])});
   const eightPuzzle5 = new SlidingTiles({initialState: List([4, 2, 1, 6, 0, 5, 3, 8, 7]), goalState: List([1, 2, 3, 4, 5, 6, 7, 8, 0])});
 
-  ;
-
   // A* uses best first search best first search algorithm implicitly (f = g + h)
   describe('A*', () => {
     test('puzzle 1', () => {
@@ -143,6 +142,43 @@ describe('algorithms', () => {
     })
     test('puzzle 5', () => {
       expect(new UniformCostSearch().findSolution(eightPuzzle5)?.pathCost).toBe(24);
+    })
+  })
+
+  describe('breadth first', () => {
+    // Each step costs 1 in the sliding tiles puzzle - we can test the optimal path cost
+    test('puzzle 1', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle1)?.pathCost).toBe(2);
+    })
+    test('puzzle 2', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle2)?.pathCost).toBe(8);
+    })
+    test('puzzle 3', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle3)?.pathCost).toBe(16);
+    })
+    test('puzzle 4', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle4)?.pathCost).toBe(22);
+    })
+    test('puzzle 5', () => {
+      expect(new BreadthFirstSearch().findSolution(eightPuzzle5)?.pathCost).toBe(24);
+    })
+  })
+
+  describe('depth first', () => {
+    test('puzzle 1', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle1)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 2', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle2)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 3', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle3)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 4', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle4)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+    test('puzzle 5', () => {
+      expect(new DepthFirstSearch().findSolution(eightPuzzle5)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
     })
   })
 })

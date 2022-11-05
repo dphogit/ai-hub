@@ -40,7 +40,9 @@ export class BestFirstSearch<S, A> extends SearchAlgorithm<S, A> {
       }
 
       node.expand(problem).forEach((child) => {
-        if (this.isGraphSearch && !explored.has(child.state)) {
+        if (!this.isGraphSearch) {
+          frontier.push(child);
+        } else if (!explored.has(child.state)) {
           frontier.push(child);
         }
       });
