@@ -12,10 +12,9 @@ import {
 import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
 import { List } from "immutable";
 
-// TODO Have a default sliding tiles solution [1, 2, 3, 4, 5, 6, 7, 8, 0] rather than configuring each time
-// TODO Generic refactor and extracting out UI logic for reusability
 // TODO Navigation bar
 // TODO Testing frontend UI
+// TODO More algorithms - BFS, DFS, IDA*, Hill Climbing
 
 const boardElement = document.querySelector('.board') as HTMLDivElement;
 
@@ -118,7 +117,7 @@ function updateModalError(message: string) {
 }
 
 function validatePuzzleInput(value: string): Puzzle | null {
-  const solution = ['1', '2', '3', '4', '5', '6', '7', '8', '0'];
+  const solution = [1, 2, 3, 4, 5, 6, 7, 8, 0];
   const pool = new Set(solution);
   const split = value.split('');
   const puzzle = List(split.map((s) => parseInt(s)));
@@ -126,7 +125,7 @@ function validatePuzzleInput(value: string): Puzzle | null {
   if (puzzle.size !== solution.length) return null;
 
   puzzle.forEach((i) => {
-    pool.delete(i.toString());
+    pool.delete(i);
   })
 
   if (pool.size !== 0) return null;
