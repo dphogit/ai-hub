@@ -12,8 +12,6 @@ import {
 import SearchAlgorithm from "./search/algorithms/SearchAlgorithm";
 import { List } from "immutable";
 
-// TODO Navigation bar
-// TODO Testing frontend UI
 // TODO More algorithms - BFS, DFS, IDA*, Hill Climbing
 
 const boardElement = document.querySelector('.board') as HTMLDivElement;

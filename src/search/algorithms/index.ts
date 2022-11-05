@@ -1,4 +1,2 @@
-export * from './BestFirstSearch';
-export * from './AStarSearch';
-export * from './GreedySearch';
-export * from './UniformCostSearch';
+export * from './informed';
+export * from './uninformed';

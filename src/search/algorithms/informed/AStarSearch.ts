@@ -1,4 +1,4 @@
-import { HeuristicFunction } from "../types";
+import { HeuristicFunction } from "../../types";
 import { BestFirstSearch } from "./BestFirstSearch";
 
 /**

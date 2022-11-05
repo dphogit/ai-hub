@@ -1,4 +1,4 @@
-import { BestFirstSearch } from "./BestFirstSearch";
+import { BestFirstSearch } from "../informed/BestFirstSearch";
 
 /**
  * Uniform cost search is a specific best-first search algorithm with the evaluation function

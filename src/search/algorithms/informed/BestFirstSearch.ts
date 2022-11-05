@@ -1,8 +1,8 @@
 import { Heap } from "mnemonist";
 import { Set } from "immutable";
-import { EvaluationFunction, SearchProblem } from "../core";
-import { STNode } from "../core";
-import SearchAlgorithm from "./SearchAlgorithm";
+import { EvaluationFunction, SearchProblem } from "../../core";
+import { STNode } from "../../core";
+import SearchAlgorithm from "../SearchAlgorithm";
 
 /**
  * Best first search based which uses a priority queue based on an evaluation function
