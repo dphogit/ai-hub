@@ -5,7 +5,7 @@ import {
   GreedySearch,
   UniformCostSearch,
   BreadthFirstSearch,
-  DepthFirstSearch,
+  DepthFirstSearch, IDAStarSearch,
 } from "../search";
 
 // Unit tests for all problems and their implementations
@@ -180,6 +180,24 @@ describe('algorithms', () => {
     })
     test('puzzle 5', () => {
       expect(new DepthFirstSearch().findSolution(eightPuzzle5)?.state).toEqual(List([1, 2, 3, 4, 5, 6, 7, 8, 0]));
+    })
+  })
+
+  describe('IDA*', () => {
+    test('puzzle 1', () => {
+      expect(new IDAStarSearch(eightPuzzle1.manhattanDistanceHeuristic.bind(eightPuzzle1)).findSolution(eightPuzzle1)?.pathCost).toBe(2);
+    })
+    test('puzzle 2', () => {
+      expect(new IDAStarSearch(eightPuzzle2.manhattanDistanceHeuristic.bind(eightPuzzle2)).findSolution(eightPuzzle2)?.pathCost).toBe(8);
+    })
+    test('puzzle 3', () => {
+      expect(new IDAStarSearch(eightPuzzle3.manhattanDistanceHeuristic.bind(eightPuzzle3)).findSolution(eightPuzzle3)?.pathCost).toBe(16);
+    })
+    test('puzzle 4', () => {
+      expect(new IDAStarSearch(eightPuzzle4.manhattanDistanceHeuristic.bind(eightPuzzle4)).findSolution(eightPuzzle4)?.pathCost).toBe(22);
+    })
+    test('puzzle 5', () => {
+      expect(new IDAStarSearch(eightPuzzle5.manhattanDistanceHeuristic.bind(eightPuzzle5)).findSolution(eightPuzzle5)?.pathCost).toBe(24);
     })
   })
 })

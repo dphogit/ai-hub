@@ -3,7 +3,7 @@ import {
   AStarSearch, BreadthFirstSearch, DepthFirstSearch,
   ExpansionListener,
   GreedySearch,
-  HeuristicFunction,
+  HeuristicFunction, IDAStarSearch,
   Puzzle,
   PuzzleAction,
   SlidingTiles,
@@ -190,6 +190,8 @@ function constructProblemSearch(stProblem: SlidingTiles): SearchAlgorithm<Puzzle
       return new AStarSearch<Puzzle, PuzzleAction>(heuristic);
     case 'Greedy':
         return new GreedySearch<Puzzle, PuzzleAction>(heuristic);
+    case 'IDA*':
+      return new IDAStarSearch<Puzzle, PuzzleAction>(heuristic);
     default:
       console.error('No selected algorithm - default to A*');
       return new AStarSearch<Puzzle, PuzzleAction>(heuristic);

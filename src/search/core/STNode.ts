@@ -1,4 +1,4 @@
-import { SearchProblem } from "../problems";
+import { SearchProblem } from "./SearchProblem";
 
 /**
  * Represents a node in the search tree. A node consists of:
@@ -32,7 +32,7 @@ export class STNode<S, A> {
   // Creates children nodes from this node using the problem's successor function.
   expand(problem: SearchProblem<S, A>): STNode<S, A>[] {
     const children: STNode<S, A>[] = [];
-    problem.getActions(this.state).forEach((action) => {
+    problem.getActions(this.state).forEach((action: A) => {
       children.push(this.generateChild(problem, action));
     })
     return children;
