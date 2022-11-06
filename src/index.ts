@@ -1,9 +1,11 @@
 import { hideElement, PuzzleBoard, showElement } from "./ui";
 import {
-  AStarSearch, BreadthFirstSearch, DepthFirstSearch,
+  AStarSearch,
+  BreadthFirstSearch,
   ExpansionListener,
   GreedySearch,
-  HeuristicFunction, IDAStarSearch,
+  HeuristicFunction,
+  IDAStarSearch,
   Puzzle,
   PuzzleAction,
   SlidingTiles,
