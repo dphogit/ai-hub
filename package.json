@@ -27,6 +27,10 @@
     "vite": "^3.2.1"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.3.7",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "framer-motion": "^6.5.1",
     "immutable": "^4.1.0",
     "mnemonist": "^0.39.4",
     "react": "^18.2.0",
