@@ -4,73 +4,77 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>AI Hub | 8 Puzzle Solver</title>
+        <title>AI Hub | Vite TS React App</title>
         <link rel="stylesheet" href="src/styles.css">
     </head>
+<!--  TODO Old vanilla - remove as migrating to React  -->
+<!--        <nav class="navbar">-->
+<!--            <div class="navbar__inner">-->
+<!--                <h2 class="navbar__logo">AI Hub</h2>-->
+<!--                <div>-->
+<!--                    <a class="navbar__link" href="https://github.com/dphogit/ai-hub" target="_blank" rel="noreferrer">GitHub</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </nav>-->
+<!--            <div class="overlay"></div>-->
+<!--            <div class="modal modal&#45;&#45;out">-->
+<!--                <header class="modal__header">-->
+<!--                    <h3 class="modal__title">Custom puzzle</h3>-->
+<!--                    <button class="modal__close">X</button>-->
+<!--                </header>-->
+<!--                <div class="modal__input_group">-->
+<!--                    <label for="custom-puzzle">Enter top down to bottom right e.g. 123456780</label>-->
+<!--                    <input id="custom-puzzle" />-->
+<!--                    <p class="modal__error hide"></p>-->
+<!--                </div>-->
+<!--                <footer class="modal__buttons">-->
+<!--                    <button class="modal__button modal__button&#45;&#45;cancel">Cancel</button>-->
+<!--                    <button class="modal__button modal__button&#45;&#45;confirm">Confirm</button>-->
+<!--                </footer>-->
+<!--            </div>-->
+<!--            <div class="layout">-->
+<!--                <h1>8 Puzzle Solver</h1>-->
+<!--                <div class="layout__flex">-->
+<!--                    <div class="layout__board">-->
+<!--                        <div class="board"></div>-->
+<!--                    </div>-->
+<!--                    <div class="controls">-->
+<!--                        <div class="controls__dropdown controls__dropdown&#45;&#45;algorithm">-->
+<!--                            <label for="algorithm">Algorithm</label>-->
+<!--                            <select id="algorithm">-->
+<!--                                <option>A*</option>-->
+<!--                                <option>IDA*</option>-->
+<!--                                <option>Greedy</option>-->
+<!--                                <option>Uniform Cost</option>-->
+<!--                                <option>BFS</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div class="controls__dropdown controls__dropdown&#45;&#45;heuristic">-->
+<!--                            <label for="heuristic">Heuristic</label>-->
+<!--                            <select id="heuristic">-->
+<!--                                <option>Manhattan Distance</option>-->
+<!--                                <option>Misplaced Tiles</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div class="controls__buttons">-->
+<!--                            <button class="controls__button controls__button&#45;&#45;custom">Custom</button>-->
+<!--                            <button class="controls__button controls__button&#45;&#45;scramble">Scramble</button>-->
+<!--                            <button class="controls__button controls__button&#45;&#45;solve">Solve</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="stats hide">-->
+<!--                    <h2 class="stats__heading">Stats</h2>-->
+<!--                    <p class="stats__steps">0</p>-->
+<!--                    <p class="stats__expansions">0</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <script type="module" src="src/index.tsx"></script>-->
     <body>
-        <nav class="navbar">
-            <div class="navbar__inner">
-                <h2 class="navbar__logo">AI Hub</h2>
-                <div>
-                    <a class="navbar__link" href="https://github.com/dphogit/ai-hub" target="_blank" rel="noreferrer">GitHub</a>
-                </div>
-            </div>
-        </nav>
         <main>
-            <div class="overlay"></div>
-            <div class="modal modal--out">
-                <header class="modal__header">
-                    <h3 class="modal__title">Custom puzzle</h3>
-                    <button class="modal__close">X</button>
-                </header>
-                <div class="modal__input_group">
-                    <label for="custom-puzzle">Enter top down to bottom right e.g. 123456780</label>
-                    <input id="custom-puzzle" />
-                    <p class="modal__error hide"></p>
-                </div>
-                <footer class="modal__buttons">
-                    <button class="modal__button modal__button--cancel">Cancel</button>
-                    <button class="modal__button modal__button--confirm">Confirm</button>
-                </footer>
-            </div>
-            <div class="layout">
-                <h1>8 Puzzle Solver</h1>
-                <div class="layout__flex">
-                    <div class="layout__board">
-                        <div class="board"></div>
-                    </div>
-                    <div class="controls">
-                        <div class="controls__dropdown controls__dropdown--algorithm">
-                            <label for="algorithm">Algorithm</label>
-                            <select id="algorithm">
-                                <option>A*</option>
-                                <option>IDA*</option>
-                                <option>Greedy</option>
-                                <option>Uniform Cost</option>
-                                <option>BFS</option>
-                            </select>
-                        </div>
-                        <div class="controls__dropdown controls__dropdown--heuristic">
-                            <label for="heuristic">Heuristic</label>
-                            <select id="heuristic">
-                                <option>Manhattan Distance</option>
-                                <option>Misplaced Tiles</option>
-                            </select>
-                        </div>
-                        <div class="controls__buttons">
-                            <button class="controls__button controls__button--custom">Custom</button>
-                            <button class="controls__button controls__button--scramble">Scramble</button>
-                            <button class="controls__button controls__button--solve">Solve</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="stats hide">
-                    <h2 class="stats__heading">Stats</h2>
-                    <p class="stats__steps">0</p>
-                    <p class="stats__expansions">0</p>
-                </div>
-            </div>
-            <script type="module" src="src/index.ts"></script>
+
+            <div id="root"></div>
+            <script type="module" src="/src/main.tsx"></script>
         </main>
     </body>
 </html>
