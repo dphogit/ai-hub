@@ -14,8 +14,33 @@ import {
 } from '@chakra-ui/react';
 import Layout from '../../layout';
 import PuzzleBoard from './puzzle-board';
+import React, { useState } from 'react';
+
+enum Algorithms {
+  BFS = 'BFS',
+  A_STAR = 'A*',
+  IDA_STAR = 'IDA*',
+  UCS = 'UCS',
+  GREEDY = 'Greedy',
+}
+
+enum Heuristics {
+  MANHATTAN = 'Manhattan Distance',
+  MISPLACED = 'Misplaced Tiles',
+}
 
 const EightPuzzlePage = () => {
+  const [algo, setAlgo] = useState<Algorithms>(Algorithms.A_STAR);
+  const [heuristic, setHeuristic] = useState<Heuristics>(Heuristics.MANHATTAN);
+
+  const handleAlgoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setAlgo(event.target.value as Algorithms);
+  };
+
+  const handleHeuristicChange = (value: string) => {
+    setHeuristic(value as Heuristics);
+  };
+
   return (
     <Layout>
       <Center flexDir="column">
@@ -27,20 +52,20 @@ const EightPuzzlePage = () => {
           <VStack spacing={10}>
             <FormControl>
               <FormLabel>Algorithm</FormLabel>
-              <Select placeholder="Choose an Algorithm">
-                <option>A*</option>
-                <option>IDA*</option>
-                <option>Greedy</option>
-                <option>Uniform Cost</option>
-                <option>BFS</option>
+              <Select value={algo} onChange={handleAlgoChange}>
+                <option value={Algorithms.A_STAR}>A*</option>
+                <option value={Algorithms.IDA_STAR}>IDA*</option>
+                <option value={Algorithms.GREEDY}>Greedy</option>
+                <option value={Algorithms.UCS}>Uniform Cost</option>
+                <option value={Algorithms.BFS}>BFS</option>
               </Select>
             </FormControl>
             <FormControl as="fieldset">
               <FormLabel as="legend">Heuristic</FormLabel>
-              <RadioGroup>
+              <RadioGroup value={heuristic} onChange={handleHeuristicChange}>
                 <HStack spacing={10}>
-                  <Radio>Manhattan Distance</Radio>
-                  <Radio>Misplaced Tiles</Radio>
+                  <Radio value={Heuristics.MANHATTAN}>Manhattan Distance</Radio>
+                  <Radio value={Heuristics.MISPLACED}>Misplaced Tiles</Radio>
                 </HStack>
               </RadioGroup>
             </FormControl>
