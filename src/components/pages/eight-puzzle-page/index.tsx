@@ -15,9 +15,19 @@ import {
 } from '@chakra-ui/react';
 import Layout from '../../layout';
 import PuzzleBoard from './puzzle-board';
-import { SlidingTiles } from '../../../search';
+import {
+  AStarSearch,
+  BreadthFirstSearch,
+  GreedySearch,
+  IDAStarSearch,
+  Puzzle,
+  PuzzleAction,
+  SlidingTiles,
+  UniformCostSearch,
+} from '../../../search';
 import { List } from 'immutable';
 import CustomModal from './custom-modal';
+import SearchAlgorithm from '../../../search/algorithms/SearchAlgorithm';
 
 enum Algorithms {
   BFS = 'BFS',
@@ -56,8 +66,9 @@ const generatePuzzle = (puzzle: number[]) => {
 const EightPuzzlePage = () => {
   const [algo, setAlgo] = useState<Algorithms>(Algorithms.A_STAR);
   const [heuristic, setHeuristic] = useState<Heuristics>(Heuristics.MANHATTAN);
-  const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
   const [puzzle, setPuzzle] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+  const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
+  const [isSolving, setIsSolving] = useState<boolean>(false);
 
   useEffect(() => {
     setPuzzle((prevPuzzle) => generatePuzzle(prevPuzzle));
@@ -72,7 +83,63 @@ const EightPuzzlePage = () => {
   };
 
   const handleSolveClick = () => {
-    // TODO: Implement solving
+    const stProblem = new SlidingTiles({
+      initialState: List(puzzle),
+      goalState: List([1, 2, 3, 4, 5, 6, 7, 8, 0]),
+    });
+
+    // Get heuristic function
+    let heuristicFn:
+      | SlidingTiles['manhattanDistanceHeuristic']
+      | SlidingTiles['misplacedTilesHeuristic'];
+    switch (heuristic) {
+      case Heuristics.MANHATTAN:
+        heuristicFn = stProblem.manhattanDistanceHeuristic.bind(stProblem);
+        break;
+      case Heuristics.MISPLACED:
+        heuristicFn = stProblem.misplacedTilesHeuristic.bind(stProblem);
+        break;
+      default:
+        heuristicFn = stProblem.manhattanDistanceHeuristic.bind(stProblem);
+    }
+
+    // Get search algorithm
+    let searchAlgorithm: SearchAlgorithm<Puzzle, PuzzleAction>;
+    switch (algo) {
+      case Algorithms.BFS:
+        searchAlgorithm = new BreadthFirstSearch();
+        break;
+      case Algorithms.UCS:
+        searchAlgorithm = new UniformCostSearch();
+        break;
+      case Algorithms.A_STAR:
+        searchAlgorithm = new AStarSearch(heuristicFn);
+        break;
+      case Algorithms.IDA_STAR:
+        searchAlgorithm = new IDAStarSearch(heuristicFn);
+        break;
+      case Algorithms.GREEDY:
+        searchAlgorithm = new GreedySearch(heuristicFn);
+        break;
+      default:
+        searchAlgorithm = new AStarSearch(heuristicFn);
+    }
+
+    setIsSolving(true);
+    const solution = searchAlgorithm.findSolution(stProblem);
+    setIsSolving(false);
+
+    if (solution) {
+      const solutionPath = [...solution.path()];
+      const intervalId = setInterval(() => {
+        const node = solutionPath.shift();
+        if (node) {
+          setPuzzle(node.state.toArray());
+        } else {
+          clearInterval(intervalId);
+        }
+      }, 200);
+    }
   };
 
   const handleShuffleClick = () => {
@@ -128,7 +195,9 @@ const EightPuzzlePage = () => {
                 justifyContent="space-between"
                 w="100%"
               >
-                <Button colorScheme="blue">Solve</Button>
+                <Button onClick={handleSolveClick} colorScheme="blue">
+                  Solve
+                </Button>
                 <Button onClick={handleShuffleClick}>Shuffle</Button>
                 <Button onClick={handleCustomClick}>Custom</Button>
               </ButtonGroup>
