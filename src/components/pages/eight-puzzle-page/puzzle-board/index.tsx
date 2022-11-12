@@ -1,7 +1,11 @@
 import { Grid } from '@chakra-ui/react';
 import Tile from './tile';
 
-const PuzzleBoard = () => {
+interface Props {
+  puzzle: number[];
+}
+
+const PuzzleBoard = ({ puzzle }: Props) => {
   return (
     <Grid
       templateColumns="repeat(3, 1fr)"
@@ -13,15 +17,9 @@ const PuzzleBoard = () => {
       bg="red.900"
       outline="3px solid black"
     >
-      <Tile val={1} />
-      <Tile val={2} />
-      <Tile val={3} />
-      <Tile val={4} />
-      <Tile val={5} />
-      <Tile val={6} />
-      <Tile val={7} />
-      <Tile val={8} />
-      <Tile val={0} />
+      {puzzle.map((val) => (
+        <Tile key={val} val={val} />
+      ))}
     </Grid>
   );
 };

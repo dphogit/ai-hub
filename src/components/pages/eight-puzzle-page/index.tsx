@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -14,7 +15,8 @@ import {
 } from '@chakra-ui/react';
 import Layout from '../../layout';
 import PuzzleBoard from './puzzle-board';
-import React, { useState } from 'react';
+import { SlidingTiles } from '../../../search';
+import { List } from 'immutable';
 
 enum Algorithms {
   BFS = 'BFS',
@@ -32,6 +34,32 @@ enum Heuristics {
 const EightPuzzlePage = () => {
   const [algo, setAlgo] = useState<Algorithms>(Algorithms.A_STAR);
   const [heuristic, setHeuristic] = useState<Heuristics>(Heuristics.MANHATTAN);
+  const [puzzle, setPuzzle] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 0]);
+
+  const scramble = (puzzle: number[]): number[] => {
+    const shuffled = [...puzzle];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const generatePuzzle = (puzzle: number[]) => {
+    let isGenerating = true;
+    let generated = puzzle; // Keep TS happy
+    while (isGenerating) {
+      generated = scramble(puzzle);
+      if (SlidingTiles.isSolvable(List(generated))) {
+        isGenerating = false;
+      }
+    }
+    return generated;
+  };
+
+  useEffect(() => {
+    setPuzzle((prevPuzzle) => generatePuzzle(prevPuzzle));
+  }, []);
 
   const handleAlgoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setAlgo(event.target.value as Algorithms);
@@ -41,6 +69,10 @@ const EightPuzzlePage = () => {
     setHeuristic(value as Heuristics);
   };
 
+  const handleShuffleClick = () => {
+    setPuzzle((prevPuzzle) => generatePuzzle(prevPuzzle));
+  };
+
   return (
     <Layout>
       <Center flexDir="column">
@@ -48,7 +80,7 @@ const EightPuzzlePage = () => {
           8 Puzzle Solver
         </Heading>
         <Flex gap={20} mt={20}>
-          <PuzzleBoard />
+          <PuzzleBoard puzzle={puzzle} />
           <VStack spacing={10}>
             <FormControl>
               <FormLabel>Algorithm</FormLabel>
@@ -76,7 +108,7 @@ const EightPuzzlePage = () => {
               w="100%"
             >
               <Button>Custom</Button>
-              <Button>Scramble</Button>
+              <Button onClick={handleShuffleClick}>Shuffle</Button>
               <Button>Solve</Button>
             </ButtonGroup>
           </VStack>
