@@ -2,12 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ChakraProvider } from '@chakra-ui/react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './components/pages/home';
+import HomePage from './components/pages/home-page';
+import EightPuzzlePage from './components/pages/eight-puzzle-page';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <HomePage />,
+  },
+  {
+    path: '/eight-puzzle',
+    element: <EightPuzzlePage />,
   },
 ]);
 

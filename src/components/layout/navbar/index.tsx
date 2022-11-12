@@ -1,5 +1,6 @@
-import { Box, Flex, Heading, Link, Spacer } from '@chakra-ui/react';
+import { Box, Flex, HStack, Link, Spacer, Text } from '@chakra-ui/react';
 import { GitHub } from 'react-feather';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Navbar = () => {
   return (
@@ -13,14 +14,42 @@ const Navbar = () => {
       width="100%"
     >
       <Flex alignItems="center" maxW="container.xl" px={4} py={4} mx="auto">
-        <Heading fontSize="3xl">AI Hub</Heading>
+        <Text fontFamily="heading" as="h2">
+          <Link
+            as={RouterLink}
+            to="/"
+            fontWeight="bold"
+            _hover={{ textDecoration: 'none' }}
+          >
+            AI Hub
+          </Link>
+        </Text>
+        <HStack spacing={4} ml={10}>
+          <Link
+            as={RouterLink}
+            to="/eight-puzzle"
+            fontSize="sm"
+            fontWeight="500"
+            color="gray.600"
+            _hover={{
+              textDecoration: 'none',
+              color: 'gray.800',
+            }}
+          >
+            8 Puzzle Solver
+          </Link>
+        </HStack>
         <Spacer />
         <Link
           href="https://github.com/dphogit/ai-hub"
           target="_blank"
           rel="noreferrer"
+          color="gray.600"
+          _hover={{
+            color: 'gray.800',
+          }}
         >
-          <GitHub size={24} color="black" />
+          <GitHub size={20} />
         </Link>
       </Flex>
     </Box>
