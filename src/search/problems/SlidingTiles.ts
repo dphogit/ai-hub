@@ -1,5 +1,4 @@
 import { Puzzle, PuzzleAction, SearchProblem } from '../core';
-import { List } from 'immutable';
 
 /**
  * The sliding tiles' problem where the goal is to move the tiles around
@@ -40,7 +39,11 @@ export class SlidingTiles extends SearchProblem<Puzzle, PuzzleAction> {
   }
 
   // Cost of moving a tile is always 1
-  getActionCost(state1: Puzzle, action: PuzzleAction, state2: Puzzle): number {
+  getActionCost(
+    _state1: Puzzle,
+    _action: PuzzleAction,
+    _state2: Puzzle,
+  ): number {
     return 1;
   }
 
@@ -82,14 +85,14 @@ export class SlidingTiles extends SearchProblem<Puzzle, PuzzleAction> {
     let inversions = 0;
 
     for (let i = 0; i < state.size; i++) {
-      const iTile = state.get(i)!;
-      if (iTile === SlidingTiles.BLANK_TILE) {
+      const iTile = state.get(i);
+      if (!iTile || iTile === SlidingTiles.BLANK_TILE) {
         continue;
       }
 
       for (let j = i + 1; j < state.size; j++) {
-        const jTile = state.get(j)!;
-        if (jTile !== SlidingTiles.BLANK_TILE && iTile > jTile) {
+        const jTile = state.get(j);
+        if (jTile && jTile !== SlidingTiles.BLANK_TILE && iTile > jTile) {
           inversions++;
         }
       }
@@ -141,31 +144,5 @@ export class SlidingTiles extends SearchProblem<Puzzle, PuzzleAction> {
       const manhattanDistance = deltaVert + deltaHor;
       return acc + manhattanDistance;
     }, 0);
-  }
-}
-
-export function createSolvedPuzzle(n: number): Puzzle {
-  const puzzle = [];
-  for (let i = 1; i < n * n; i++) {
-    puzzle.push(i);
-  }
-  puzzle.push(SlidingTiles.BLANK_TILE);
-  return List(puzzle);
-}
-
-export function shufflePuzzle(puzzle: Puzzle): Puzzle {
-  const shuffled = puzzle.toArray();
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return List(shuffled);
-}
-
-export function generateRandomPuzzle(n: number) {
-  const solved = createSolvedPuzzle(n);
-  while (true) {
-    const shuffled = shufflePuzzle(solved);
-    if (SlidingTiles.isSolvable(shuffled)) return { solved, shuffled };
   }
 }

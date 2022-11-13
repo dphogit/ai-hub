@@ -1,7 +1,7 @@
-import { Set } from "immutable";
-import SearchAlgorithm from "../SearchAlgorithm";
-import { SearchProblem, STNode } from "../../core";
-import {  Stack } from "mnemonist";
+import { Set } from 'immutable';
+import SearchAlgorithm from '../SearchAlgorithm';
+import { SearchProblem, STNode } from '../../core';
+import { Stack } from 'mnemonist';
 
 /**
  * Depth first search (DFS) is an uninformed search algorithm
@@ -20,7 +20,8 @@ export class DepthFirstSearch<S, A> extends SearchAlgorithm<S, A> {
     let explored = Set<S>();
 
     while (frontier.size) {
-      const node = frontier.pop()!;
+      const node = frontier.pop();
+      if (!node) break;
 
       if (problem.isGoal(node.state)) {
         return node;

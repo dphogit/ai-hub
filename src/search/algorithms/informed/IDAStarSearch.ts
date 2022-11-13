@@ -1,5 +1,5 @@
-import SearchAlgorithm from "../SearchAlgorithm";
-import { HeuristicFunction, SearchProblem, STNode } from "../../core";
+import SearchAlgorithm from '../SearchAlgorithm';
+import { HeuristicFunction, SearchProblem, STNode } from '../../core';
 
 /**
  * Iterative deepening A* search is a variant of iterative deepening depth-first
@@ -26,12 +26,14 @@ export class IDAStarSearch<S, A> extends SearchAlgorithm<S, A> {
     let bound = this.heuristicFn(root.state);
     const path = [root];
 
-    while (true) {
+    const isSearching = true;
+    while (isSearching) {
       const candidate = this.search(path, bound);
       if (candidate === IDAStarSearch.FOUND) return path[path.length - 1];
-      if (candidate === Number.POSITIVE_INFINITY) return null;
+      if (candidate === Number.POSITIVE_INFINITY) break;
       bound = candidate;
     }
+    return null;
   }
 
   /**
@@ -41,7 +43,7 @@ export class IDAStarSearch<S, A> extends SearchAlgorithm<S, A> {
    * @param bound   A bound value used to prune the search
    */
   private search(path: STNode<S, A>[], bound: number): number {
-    if (!this.problem) throw new Error("Problem is undefined");
+    if (!this.problem) throw new Error('Problem is undefined');
 
     const node = path[path.length - 1];
     const f = node.pathCost + this.heuristicFn(node.state);
@@ -51,7 +53,7 @@ export class IDAStarSearch<S, A> extends SearchAlgorithm<S, A> {
 
     let min = Number.POSITIVE_INFINITY;
     this.notifyNodeListeners(node);
-    for (let child of node.expand(this.problem)) {
+    for (const child of node.expand(this.problem)) {
       if (path.includes(child)) continue;
 
       path.push(child);
