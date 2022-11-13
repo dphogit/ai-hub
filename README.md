@@ -1,5 +1,7 @@
 # AI Hub
 
+**This branch contains the code before migrating from vanilla HTML/CSS/TS to React**
+
 A collection of AI things I've learnt using Vite and TypeScript.
 
 https://hub-ai.netlify.app
