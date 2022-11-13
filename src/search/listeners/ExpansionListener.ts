@@ -1,10 +1,10 @@
-import { NodeListener } from "../types";
-import { STNode } from "../core";
+import { NodeListener } from '../types';
+import { STNode } from '../core';
 
 export class ExpansionListener<S, A> implements NodeListener<S, A> {
   private count = 0;
 
-  update(node: STNode<S, A>) {
+  update(_node: STNode<S, A>) {
     this.count++;
   }
 
