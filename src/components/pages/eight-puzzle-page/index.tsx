@@ -19,10 +19,12 @@ import {
   AStarSearch,
   BreadthFirstSearch,
   GreedySearch,
+  HeuristicFunction,
   IDAStarSearch,
   Puzzle,
   PuzzleAction,
   SlidingTiles,
+  STNode,
   UniformCostSearch,
 } from '../../../search';
 import { List } from 'immutable';
@@ -63,9 +65,22 @@ const generatePuzzle = (puzzle: number[]) => {
   return generated;
 };
 
+/*
+ * TODO: Improvements
+ *  - Feedback during solving
+ *  - Disable/enable controls during animation
+ *  - Hide heuristic radio group when BFS/UCS (uninformed) are selected
+ *  - Refactor (break down handleSolveClick method)
+ *    - Get algorithm
+ *    - Get heuristic
+ *    - Display solution
+ *
+ */
+
 const EightPuzzlePage = () => {
   const [algo, setAlgo] = useState<Algorithms>(Algorithms.A_STAR);
   const [heuristic, setHeuristic] = useState<Heuristics>(Heuristics.MANHATTAN);
+  const [showHeuristics, setShowHeuristics] = useState<boolean>(true);
   const [puzzle, setPuzzle] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 0]);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
   const [isSolving, setIsSolving] = useState<boolean>(false);
@@ -74,8 +89,60 @@ const EightPuzzlePage = () => {
     setPuzzle((prevPuzzle) => generatePuzzle(prevPuzzle));
   }, []);
 
+  const displaySolutionSteps = (
+    solution: STNode<Puzzle, PuzzleAction>,
+  ): void => {
+    const solutionPath = [...solution.path()];
+    const intervalId = setInterval(() => {
+      const node = solutionPath.shift();
+      if (node) {
+        setPuzzle(node.state.toArray());
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 200);
+  };
+
+  const getHeuristicFn = (
+    stProblem: SlidingTiles,
+  ): HeuristicFunction<Puzzle> => {
+    switch (heuristic) {
+      case Heuristics.MANHATTAN:
+        return stProblem.manhattanDistanceHeuristic.bind(stProblem);
+      case Heuristics.MISPLACED:
+        return stProblem.misplacedTilesHeuristic.bind(stProblem);
+      default:
+        return stProblem.manhattanDistanceHeuristic.bind(stProblem);
+    }
+  };
+
+  const getSearchAlgorithm = (
+    heuristicFn: HeuristicFunction<Puzzle>,
+  ): SearchAlgorithm<Puzzle, PuzzleAction> => {
+    switch (algo) {
+      case Algorithms.BFS:
+        return new BreadthFirstSearch();
+      case Algorithms.UCS:
+        return new UniformCostSearch();
+      case Algorithms.A_STAR:
+        return new AStarSearch(heuristicFn);
+      case Algorithms.IDA_STAR:
+        return new IDAStarSearch(heuristicFn);
+      case Algorithms.GREEDY:
+        return new GreedySearch(heuristicFn);
+      default:
+        return new AStarSearch(heuristicFn);
+    }
+  };
+
   const handleAlgoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setAlgo(event.target.value as Algorithms);
+    const selectedAlgo = event.target.value as Algorithms;
+    setAlgo(selectedAlgo);
+    const isInformedAlgo =
+      selectedAlgo === Algorithms.A_STAR ||
+      selectedAlgo === Algorithms.IDA_STAR ||
+      selectedAlgo === Algorithms.GREEDY;
+    setShowHeuristics(isInformedAlgo);
   };
 
   const handleHeuristicChange = (value: string) => {
@@ -88,57 +155,15 @@ const EightPuzzlePage = () => {
       goalState: List([1, 2, 3, 4, 5, 6, 7, 8, 0]),
     });
 
-    // Get heuristic function
-    let heuristicFn:
-      | SlidingTiles['manhattanDistanceHeuristic']
-      | SlidingTiles['misplacedTilesHeuristic'];
-    switch (heuristic) {
-      case Heuristics.MANHATTAN:
-        heuristicFn = stProblem.manhattanDistanceHeuristic.bind(stProblem);
-        break;
-      case Heuristics.MISPLACED:
-        heuristicFn = stProblem.misplacedTilesHeuristic.bind(stProblem);
-        break;
-      default:
-        heuristicFn = stProblem.manhattanDistanceHeuristic.bind(stProblem);
-    }
-
-    // Get search algorithm
-    let searchAlgorithm: SearchAlgorithm<Puzzle, PuzzleAction>;
-    switch (algo) {
-      case Algorithms.BFS:
-        searchAlgorithm = new BreadthFirstSearch();
-        break;
-      case Algorithms.UCS:
-        searchAlgorithm = new UniformCostSearch();
-        break;
-      case Algorithms.A_STAR:
-        searchAlgorithm = new AStarSearch(heuristicFn);
-        break;
-      case Algorithms.IDA_STAR:
-        searchAlgorithm = new IDAStarSearch(heuristicFn);
-        break;
-      case Algorithms.GREEDY:
-        searchAlgorithm = new GreedySearch(heuristicFn);
-        break;
-      default:
-        searchAlgorithm = new AStarSearch(heuristicFn);
-    }
+    const heuristicFn = getHeuristicFn(stProblem);
+    const searchAlgorithm = getSearchAlgorithm(heuristicFn);
 
     setIsSolving(true);
     const solution = searchAlgorithm.findSolution(stProblem);
     setIsSolving(false);
 
     if (solution) {
-      const solutionPath = [...solution.path()];
-      const intervalId = setInterval(() => {
-        const node = solutionPath.shift();
-        if (node) {
-          setPuzzle(node.state.toArray());
-        } else {
-          clearInterval(intervalId);
-        }
-      }, 200);
+      displaySolutionSteps(solution);
     }
   };
 
@@ -168,7 +193,7 @@ const EightPuzzlePage = () => {
           <Flex gap={20} mt={20}>
             <PuzzleBoard puzzle={puzzle} />
             <VStack spacing={10}>
-              <FormControl>
+              <FormControl w="350px">
                 <FormLabel>Algorithm</FormLabel>
                 <Select value={algo} onChange={handleAlgoChange}>
                   <option value={Algorithms.A_STAR}>A*</option>
@@ -178,21 +203,29 @@ const EightPuzzlePage = () => {
                   <option value={Algorithms.BFS}>BFS</option>
                 </Select>
               </FormControl>
-              <FormControl as="fieldset">
-                <FormLabel as="legend">Heuristic</FormLabel>
-                <RadioGroup value={heuristic} onChange={handleHeuristicChange}>
-                  <HStack spacing={10}>
-                    <Radio value={Heuristics.MANHATTAN}>
-                      Manhattan Distance
-                    </Radio>
-                    <Radio value={Heuristics.MISPLACED}>Misplaced Tiles</Radio>
-                  </HStack>
-                </RadioGroup>
-              </FormControl>
+              {showHeuristics && (
+                <FormControl as="fieldset">
+                  <FormLabel as="legend">Heuristic</FormLabel>
+                  <RadioGroup
+                    value={heuristic}
+                    onChange={handleHeuristicChange}
+                  >
+                    <HStack spacing={10}>
+                      <Radio value={Heuristics.MANHATTAN}>
+                        Manhattan Distance
+                      </Radio>
+                      <Radio value={Heuristics.MISPLACED}>
+                        Misplaced Tiles
+                      </Radio>
+                    </HStack>
+                  </RadioGroup>
+                </FormControl>
+              )}
               <ButtonGroup
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
+                spacing={8}
                 w="100%"
               >
                 <Button onClick={handleSolveClick} colorScheme="blue">
