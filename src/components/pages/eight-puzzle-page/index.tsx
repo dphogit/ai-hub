@@ -118,7 +118,7 @@ const EightPuzzlePage = () => {
         clearInterval(intervalId);
         setIsDisplayingSteps(false);
       }
-    }, 200);
+    }, 250);
   };
 
   const handleAlgoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
