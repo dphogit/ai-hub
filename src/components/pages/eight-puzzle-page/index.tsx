@@ -68,13 +68,6 @@ const generatePuzzle = (puzzle: number[]) => {
 /*
  * TODO: Improvements
  *  - Feedback during solving
- *  - Disable/enable controls during animation
- *  - Hide heuristic radio group when BFS/UCS (uninformed) are selected
- *  - Refactor (break down handleSolveClick method)
- *    - Get algorithm
- *    - Get heuristic
- *    - Display solution
- *
  */
 
 const EightPuzzlePage = () => {
@@ -84,24 +77,11 @@ const EightPuzzlePage = () => {
   const [puzzle, setPuzzle] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 0]);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
   const [isSolving, setIsSolving] = useState<boolean>(false);
+  const [isDisplayingSteps, setIsDisplayingSteps] = useState<boolean>(false);
 
   useEffect(() => {
     setPuzzle((prevPuzzle) => generatePuzzle(prevPuzzle));
   }, []);
-
-  const displaySolutionSteps = (
-    solution: STNode<Puzzle, PuzzleAction>,
-  ): void => {
-    const solutionPath = [...solution.path()];
-    const intervalId = setInterval(() => {
-      const node = solutionPath.shift();
-      if (node) {
-        setPuzzle(node.state.toArray());
-      } else {
-        clearInterval(intervalId);
-      }
-    }, 200);
-  };
 
   const getHeuristicFn = (
     stProblem: SlidingTiles,
@@ -133,6 +113,22 @@ const EightPuzzlePage = () => {
       default:
         return new AStarSearch(heuristicFn);
     }
+  };
+
+  const displaySolutionSteps = (
+    solution: STNode<Puzzle, PuzzleAction>,
+  ): void => {
+    setIsDisplayingSteps(true);
+    const solutionPath = [...solution.path()];
+    const intervalId = setInterval(() => {
+      const node = solutionPath.shift();
+      if (node) {
+        setPuzzle(node.state.toArray());
+      } else {
+        clearInterval(intervalId);
+        setIsDisplayingSteps(false);
+      }
+    }, 200);
   };
 
   const handleAlgoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -193,7 +189,7 @@ const EightPuzzlePage = () => {
           <Flex gap={20} mt={20}>
             <PuzzleBoard puzzle={puzzle} />
             <VStack spacing={10}>
-              <FormControl w="350px">
+              <FormControl w="350px" isDisabled={isDisplayingSteps}>
                 <FormLabel>Algorithm</FormLabel>
                 <Select value={algo} onChange={handleAlgoChange}>
                   <option value={Algorithms.A_STAR}>A*</option>
@@ -204,7 +200,7 @@ const EightPuzzlePage = () => {
                 </Select>
               </FormControl>
               {showHeuristics && (
-                <FormControl as="fieldset">
+                <FormControl as="fieldset" isDisabled={isDisplayingSteps}>
                   <FormLabel as="legend">Heuristic</FormLabel>
                   <RadioGroup
                     value={heuristic}
@@ -227,6 +223,7 @@ const EightPuzzlePage = () => {
                 justifyContent="space-between"
                 spacing={8}
                 w="100%"
+                isDisabled={isDisplayingSteps}
               >
                 <Button onClick={handleSolveClick} colorScheme="blue">
                   Solve
