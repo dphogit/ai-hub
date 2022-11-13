@@ -2,7 +2,7 @@ import { Box, Flex, HStack, Link, Spacer, Text } from '@chakra-ui/react';
 import { GitHub } from 'react-feather';
 import { NavLink as RouterLink } from 'react-router-dom';
 import NavLink from './navlink';
-import { PageRoutes } from '../../../common/routes';
+import { ExternalRoutes, PageRoutes } from '../../../common/routes';
 
 const Navbar = () => {
   return (
@@ -31,7 +31,7 @@ const Navbar = () => {
         </HStack>
         <Spacer />
         <Link
-          href="https://github.com/dphogit/ai-hub"
+          href={ExternalRoutes.GITHUB}
           target="_blank"
           rel="noreferrer"
           color="gray.600"

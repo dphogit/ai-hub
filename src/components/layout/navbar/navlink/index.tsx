@@ -15,9 +15,9 @@ const NavLink = ({ children, to }: Props) => {
       fontSize="sm"
       fontWeight="500"
       color="gray.600"
+      rounded="md"
       px={3}
       py={1}
-      borderRadius={8}
       _hover={{ textDecoration: 'none', color: 'gray.800' }}
       _activeLink={{ backgroundColor: 'gray.100' }}
     >
