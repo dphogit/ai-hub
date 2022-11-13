@@ -12,7 +12,8 @@ const HomePage = () => {
           AI Hub
         </Heading>
         <Text color="gray.500" fontSize="lg" mt={4} mb={8}>
-          A side project curating demonstrating what I&apos;ve learned about AI.
+          A side project curating and demonstrating what I&apos;ve learned about
+          AI.
         </Text>
         <Link
           isExternal
