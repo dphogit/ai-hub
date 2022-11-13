@@ -1,6 +1,8 @@
 import { Box, Flex, HStack, Link, Spacer, Text } from '@chakra-ui/react';
 import { GitHub } from 'react-feather';
-import { Link as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink } from 'react-router-dom';
+import NavLink from './navlink';
+import { PageRoutes } from '../../../common/routes';
 
 const Navbar = () => {
   return (
@@ -17,27 +19,15 @@ const Navbar = () => {
         <Text fontFamily="heading" as="h2">
           <Link
             as={RouterLink}
-            to="/"
+            to={PageRoutes.HOME}
             fontWeight="bold"
             _hover={{ textDecoration: 'none' }}
           >
             AI Hub
           </Link>
         </Text>
-        <HStack spacing={4} ml={10}>
-          <Link
-            as={RouterLink}
-            to="/eight-puzzle"
-            fontSize="sm"
-            fontWeight="500"
-            color="gray.600"
-            _hover={{
-              textDecoration: 'none',
-              color: 'gray.800',
-            }}
-          >
-            8 Puzzle Solver
-          </Link>
+        <HStack spacing={4} ml={8}>
+          <NavLink to={PageRoutes.EIGHT_PUZZLE}>8 Puzzle Solver</NavLink>
         </HStack>
         <Spacer />
         <Link
