@@ -89,7 +89,7 @@ const CustomModal = ({ isOpen, onClose, onConfirm }: Props) => {
       <ModalContent>
         <ModalHeader>Custom Puzzle</ModalHeader>
         <ModalCloseButton />
-        <ModalBody pb={6}>
+        <ModalBody py={2}>
           <FormControl isInvalid={errorMsg !== ''}>
             <FormLabel>Enter top down to bottom right e.g. 123456780</FormLabel>
             <Input

@@ -20,7 +20,6 @@ import {
   BreadthFirstSearch,
   GreedySearch,
   HeuristicFunction,
-  IDAStarSearch,
   Puzzle,
   PuzzleAction,
   SlidingTiles,
@@ -34,7 +33,6 @@ import SearchAlgorithm from '../../../search/algorithms/SearchAlgorithm';
 enum Algorithms {
   BFS = 'BFS',
   A_STAR = 'A*',
-  IDA_STAR = 'IDA*',
   UCS = 'UCS',
   GREEDY = 'Greedy',
 }
@@ -65,18 +63,12 @@ const generatePuzzle = (puzzle: number[]) => {
   return generated;
 };
 
-/*
- * TODO: Improvements
- *  - Feedback during solving
- */
-
 const EightPuzzlePage = () => {
   const [algo, setAlgo] = useState<Algorithms>(Algorithms.A_STAR);
   const [heuristic, setHeuristic] = useState<Heuristics>(Heuristics.MANHATTAN);
   const [showHeuristics, setShowHeuristics] = useState<boolean>(true);
   const [puzzle, setPuzzle] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 0]);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
-  const [isSolving, setIsSolving] = useState<boolean>(false);
   const [isDisplayingSteps, setIsDisplayingSteps] = useState<boolean>(false);
 
   useEffect(() => {
@@ -106,8 +98,6 @@ const EightPuzzlePage = () => {
         return new UniformCostSearch();
       case Algorithms.A_STAR:
         return new AStarSearch(heuristicFn);
-      case Algorithms.IDA_STAR:
-        return new IDAStarSearch(heuristicFn);
       case Algorithms.GREEDY:
         return new GreedySearch(heuristicFn);
       default:
@@ -135,9 +125,7 @@ const EightPuzzlePage = () => {
     const selectedAlgo = event.target.value as Algorithms;
     setAlgo(selectedAlgo);
     const isInformedAlgo =
-      selectedAlgo === Algorithms.A_STAR ||
-      selectedAlgo === Algorithms.IDA_STAR ||
-      selectedAlgo === Algorithms.GREEDY;
+      selectedAlgo === Algorithms.A_STAR || selectedAlgo === Algorithms.GREEDY;
     setShowHeuristics(isInformedAlgo);
   };
 
@@ -154,13 +142,8 @@ const EightPuzzlePage = () => {
     const heuristicFn = getHeuristicFn(stProblem);
     const searchAlgorithm = getSearchAlgorithm(heuristicFn);
 
-    setIsSolving(true);
     const solution = searchAlgorithm.findSolution(stProblem);
-    setIsSolving(false);
-
-    if (solution) {
-      displaySolutionSteps(solution);
-    }
+    solution && displaySolutionSteps(solution);
   };
 
   const handleShuffleClick = () => {
@@ -193,7 +176,6 @@ const EightPuzzlePage = () => {
                 <FormLabel>Algorithm</FormLabel>
                 <Select value={algo} onChange={handleAlgoChange}>
                   <option value={Algorithms.A_STAR}>A*</option>
-                  <option value={Algorithms.IDA_STAR}>IDA*</option>
                   <option value={Algorithms.GREEDY}>Greedy</option>
                   <option value={Algorithms.UCS}>Uniform Cost</option>
                   <option value={Algorithms.BFS}>BFS</option>
