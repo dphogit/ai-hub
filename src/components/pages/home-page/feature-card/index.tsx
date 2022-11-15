@@ -1,4 +1,5 @@
 import { Box, Image, Link, Text } from '@chakra-ui/react';
+import { NavLink } from 'react-router-dom';
 
 interface Props {
   heading: string;
@@ -11,7 +12,7 @@ interface Props {
 
 const FeatureCard = ({ heading, image, route }: Props) => {
   return (
-    <Link href={route} _hover={{ textDecoration: 'none' }}>
+    <Link as={NavLink} to={route} _hover={{ textDecoration: 'none' }}>
       <Box
         boxShadow="lg"
         rounded="md"
